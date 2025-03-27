@@ -12,7 +12,7 @@ body{
     width: 100%;
 }
 
-.loginBox{
+.loginBox, .signUpBox{
     width: 600px;
     padding: 20px;
     background: white;
@@ -23,7 +23,7 @@ body{
 .input-group{
     display: flex;
 }
-#togglePassword {
+.togglePassword {
     border-left: none;
     background: transparent;
     cursor: pointer;
