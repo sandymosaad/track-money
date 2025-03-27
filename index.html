@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/indexStyle.css">
+    <title>Login to Money Tracker</title>
+</head>
+<body>
+    <div class="container">
+        <div class="loginBox">
+            <h1>Welcome to Your Money Tracker<i class="fa-solid fa-coins text-warning ms-2 "></i> </h1>
+            <form id="loginForm">
+                <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                    <input type="text" id="userName" name="userName" class="form-control form-control-lg" placeholder="Enter your username or email" required>
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                    <input type="password" id="password" name="password" class="form-control form-control-lg" placeholder="Enter your password" required>
+                    <button type="button" class="btn btn-outline-secondary" id="togglePassword">
+                        <i class="fa fa-eye"></i>
+                    </button>
+                </div>
+
+                <p id="errorMessage" class="text-danger d-none">Invalid username or password</p>
+                <button type="submit" class="btn btn-outline-primary w-50 mt-3">Login</button><br>
+                <a href="#" class="singUp">Sign Up</a>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/jquery-3.7.1.js"></script>
+    <script src="js/login.js"></script>
+</body>
+</html>
