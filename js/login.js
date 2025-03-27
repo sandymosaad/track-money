@@ -9,7 +9,19 @@ $('#loginToggel').on('click', function(){
     $('.signUpBox').addClass('d-none');
 })
 
-$('#createAccount').on('click', function(event){
+async function hashPassword(pass) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(pass);
+    //console.log('data' + data)
+    const hash = await crypto.subtle.digest('SHA-256',data);
+    //console.log( hash)
+    let hashpass= Array.from(new Uint8Array(hash))
+    .map(byte => byte.toString(16).padStart(2,'0'))
+    .join('');
+    //console.log(hashpass)
+    return hashpass
+}
+$('#createAccount').on('click', async function(event){
     event.preventDefault(); 
 
     let userName =$('#signUpUserName').val().trim();
@@ -26,14 +38,16 @@ $('#createAccount').on('click', function(event){
         return
     }
     
-
     let usersStored=JSON.parse(localStorage.getItem('Users'))|| []
     
     if (usersStored.some(existingUser  => existingUser .email === email)) {
         $('#errorMessageEmailExisted').removeClass('d-none')
         return;
     }
-    usersStored.push({ userName, email, password });
+
+    let hashPass =await hashPassword(password);
+    // console .log(hashPass)
+    usersStored.push({ userName, email, hashPass });
 
     localStorage.setItem('Users', JSON.stringify(usersStored))
     $('.loginBox').removeClass('d-none');
@@ -62,13 +76,16 @@ return !hasError;
 
 }
 
-$('#login').on('click',function(event){
+$('#login').on('click',async function(event){
     event.preventDefault()
     let Name =$('#userName').val().trim();
     let password = $('#password').val().trim();
 
+    let hashedPassword = await hashPassword(password);
+    //console.log(hashedPassword)
+
     let users = JSON.parse(localStorage.getItem('Users'))
-    let user =users.find( user=> user.password ==password && (user.userName ===Name || user.email ===Name ));
+    let user =users.find( user=> user.hashPass ==hashedPassword && (user.userName ===Name || user.email ===Name ));
     if(user){
         sessionStorage.setItem('User',JSON.stringify(user))
         window.location.href='dashboard.html';
