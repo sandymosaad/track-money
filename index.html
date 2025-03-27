@@ -17,47 +17,47 @@
             </h1>
             <form id="loginForm">
                 <div class="input-group mb-3">
-                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                    <span class="input-group-text"><i class="fa fa-user text-warning"></i></span>
                     <input type="text" id="userName" name="userName" class="form-control form-control-lg" placeholder="Enter your username or email" required>
                 </div>
                 <div class="input-group mb-3">
-                    <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                    <span class="input-group-text"><i class="fa fa-lock text-warning"></i></span>
                     <input type="password" id="password" name="password" class="form-control form-control-lg" placeholder="Enter your password" required>
                     <button type="button" class="btn btn-outline-secondary togglePassword">
-                        <i class="fa fa-eye"></i>
+                        <i class="fa fa-eye text-warning"></i>
                     </button>
                 </div>
 
                 <p id="errorMessage" class="text-danger d-none">Invalid username or password</p>
                 <button type="submit" class="btn btn-outline-primary w-50 mt-3">Login</button><br>
-                <a href="#" class="signUp">Sign Up</a>
+                <a href="#" id="signUpToggel">Sign Up</a>
             </form>
         </div>
 
         <!--create a new account form-->
         <div class="signUpBox d-none">
             <h1>Create Your Account 
-                <i class="fa-solid fa-user-pen"></i>
+                <i class="fa-solid fa-user-pen text-warning"></i>
             </h1>
             <form id="signUpForm">
                 <div class="input-group mb-3">
-                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                    <span class="input-group-text"><i class="fa fa-user text-warning"></i></span>
                     <input type="text" id="signUpUserName" name="userName" class="form-control form-control-lg" placeholder="Enter your username" required>
                 </div>
                 <div class="input-group mb-3">
-                    <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                    <span class="input-group-text"><i class="fa fa-envelope text-warning"></i></span>
                     <input type="email" id="email" name="email" class="form-control form-control-lg" placeholder="Enter your email" required>
                 </div>
                 <div class="input-group mb-3">
-                    <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                    <span class="input-group-text"><i class="fa fa-lock text-warning"></i></span>
                     <input type="password" id="signUpPassword" name="password" class="form-control form-control-lg" placeholder="Enter your password" required>
                     <button type="button" class="btn btn-outline-secondary togglePassword">
-                        <i class="fa fa-eye"></i>
+                        <i class="fa fa-eye text-warning"></i>
                     </button>
                 </div>
 
-                <button type="submit" class="btn btn-outline-primary w-50 mt-3">Sign Up</button><br>
-                <a href="#" class="text-decoration-none loginLink">Login</a>
+                <button type="submit" class="btn btn-outline-primary w-50 mt-3" id="createAccount">Create</button><br>
+                <a href="#" class="text-decoration-none loginLink" id="loginToggel">Login</a>
             </form>
         </div>
     </div>
