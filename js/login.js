@@ -12,29 +12,60 @@ $('#loginToggel').on('click', function(){
 $('#createAccount').on('click', function(event){
     event.preventDefault(); 
 
-    let userName =$('#signUpUserName').val();
-    let email =$('#email').val();
-    let password =$('#signUpPassword').val()
+    let userName =$('#signUpUserName').val().trim();
+    let email =$('#email').val().trim();
+    let password =$('#signUpPassword').val().trim();
 
-    let user ={
-        'userName':userName,
-        'email':email,
-        'password':password
+    $('.text-danger').addClass('d-none');
+    if(!userName || !email || !password){
+        $('#fillAllFields').removeClass('d-none')
+        return
+    } 
+
+    if(!validtion(userName, email, password)){
+        return
     }
     
+   
     let usersStored=JSON.parse(localStorage.getItem('Users'))|| []
-    usersStored.push(user)
+    
+    if (usersStored.some(existingUser  => existingUser .email === email)) {
+        $('#errorMessageEmailExisted').removeClass('d-none')
+        return;
+    }
+    usersStored.push({ userName, email, password });
 
     localStorage.setItem('Users', JSON.stringify(usersStored))
-    //console.log(user)
     $('.loginBox').removeClass('d-none');
     $('.signUpBox').addClass('d-none');
 })
 
+function validtion(name, email, pass){
+
+let namePattern =/^[a-zA-Z /-]{3,}$/;
+let emailPattern =/^([a-zA-Z0-9._-]+)@(gmail|email|yahoo)\.com$/;
+let passPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z0-9@!#_-]{8,}$/;
+hasError=false;
+if(!namePattern.test(name)){
+    $('#errorMessageName').removeClass('d-none');
+    hasError=true;
+}
+if(!emailPattern.test(email)){
+    $('#errorMessageEmail').removeClass('d-none');
+    hasError=true;
+}
+if(!passPattern.test(pass)){
+    $('#errorMessagePass').removeClass('d-none');
+    hasError=true;
+}
+return !hasError; 
+
+}
+
 $('#login').on('click',function(event){
     event.preventDefault()
-    let Name =$('#userName').val();
-    let password = $('#password').val();
+    let Name =$('#userName').val().trim();
+    let password = $('#password').val().trim();
 
     let users = JSON.parse(localStorage.getItem('Users'))
     let user =users.find( user=> user.password ==password && (user.userName ===Name || user.email ===Name ));
