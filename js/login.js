@@ -31,3 +31,20 @@ $('#createAccount').on('click', function(event){
     $('.signUpBox').addClass('d-none');
 })
 
+$('#login').on('click',function(event){
+    event.preventDefault()
+    let Name =$('#userName').val();
+    let password = $('#password').val();
+
+    let users = JSON.parse(localStorage.getItem('Users'))
+    let user =users.find( user=> user.password ==password && (user.userName ===Name || user.email ===Name ));
+    if(user){
+        sessionStorage.setItem('User',JSON.stringify(user))
+        window.location.href='dashboard.html';
+        //$('#userName').val('');
+    }else{
+        $('#errorMessage').removeClass('d-none')
+    }
+    console.log(user)
+})
+

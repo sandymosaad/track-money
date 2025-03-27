@@ -28,11 +28,6 @@ body{
     background: transparent;
     cursor: pointer;
 }
-#errorMessage {
-    display: none;
-    color: red;
-    font-size: 14px;
-}
 
 .singUp {
     text-decoration: none;
