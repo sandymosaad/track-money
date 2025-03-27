@@ -26,7 +26,7 @@ $('#createAccount').on('click', function(event){
         return
     }
     
-   
+
     let usersStored=JSON.parse(localStorage.getItem('Users'))|| []
     
     if (usersStored.some(existingUser  => existingUser .email === email)) {
@@ -79,3 +79,24 @@ $('#login').on('click',function(event){
     console.log(user)
 })
 
+
+$('#togglePasswordLogin' ).on('click', function(){
+    let input =$('#password');
+    let icon = $(this).find('i');
+    togglePassword(input,icon)
+});
+$('#togglePasswordSignUp' ).on('click', function(){
+    let input =$('#signUpPassword');
+    let icon = $(this).find('i');
+    togglePassword(input,icon)
+})
+
+function togglePassword(input,icon){
+    if(input.attr('type') === 'password'){
+        input.attr('type','text')
+        icon.removeClass('fa-eye').addClass('fa-eye-slash');
+        }else{
+        input.attr('type','password')
+        icon.removeClass('fa-eye-slash').addClass('fa-eye');
+    }
+}
