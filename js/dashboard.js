@@ -22,21 +22,22 @@ let transactions = [
     { date: '5/1/2023', description: 'Salary', type: 'income', amount: 1000 },
 ];
 
-let tableBody = $('.table tbody tr');
-transactions.forEach((transaction, index) => {
-    let row = tableBody.eq(index);
-    row.find('td:nth-child(1)').text(transaction.date);
-    row.find('td:nth-child(2)').text(transaction.description);
-    row.find('td:nth-child(3)').text(transaction.type);
+
+let tableBody = document.querySelector('.table tbody');
+transactions.forEach((transaction) => {
+    let row = tableBody.insertRow(); 
+    row.insertCell(0).textContent = transaction.date;
+    row.insertCell(1).textContent = transaction.description;
+    
+    let typeCell = row.insertCell(2);
     if (transaction.type === 'income') {
-        row.find('td:nth-child(3)').html(`<span class="badge bg-success">Income</span>`);
-
+        typeCell.innerHTML = `<span class="badge bg-success">Income</span>`;
     } else {
-        row.find('td:nth-child(3)').html(`<span class="badge bg-danger">Expense</span>`);
+        typeCell.innerHTML = `<span class="badge bg-danger">Expense</span>`;
     }
-    row.find('td:nth-child(4)').text('EL.' + transaction.amount);
-})
 
+    row.insertCell(3).textContent = 'EL.' + transaction.amount;
+});
 
 
 
