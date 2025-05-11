@@ -2,7 +2,10 @@ $(document).ready(function () {
 // get user name
     let userName =JSON.parse(sessionStorage.getItem("User")).userName;
     console.log(userName)
-
+    let currentPage = 1
+    let rowsPerPage = 5
+    let transactions= JSON.parse(localStorage.getItem(`transactions-${userName}`))||[];
+    let totalPages = Math.ceil(transactions.length / rowsPerPage)
     displayTransactionsDataInTable();
 
 
@@ -39,14 +42,21 @@ function restForm(){
     $('#date').val('');
 }
 
+
 function displayTransactionsDataInTable(){
     let transactions= JSON.parse(localStorage.getItem(`transactions-${userName}`))||[];
-   let tableBody= $('#transactionsTable')[0];
-   //let tableBody = document.querySelector('.table tbody');
+    //console.log(transactions);
+    
+    let start = (currentPage - 1) * rowsPerPage
+    let end = start + rowsPerPage
 
-    console.log(tableBody)
+    let visibleData = transactions.slice(start, end);
+   //let tableBody= $('#transactionsTable')[0];
+    let tableBody = document.querySelector('.table tbody');
+
+    //console.log(tableBody)
     $(tableBody).empty();
-    transactions.forEach(transaction => {
+    visibleData.forEach(transaction => {
         let row = tableBody.insertRow();
         row.insertCell(0).textContent=transaction.descraiption;
         row.insertCell(1).textContent=transaction.amount;
@@ -56,7 +66,52 @@ function displayTransactionsDataInTable(){
         row.insertCell(4).innerHTML=`<button class="btn btn-danger btn-sm" "><i class="fa fa-trash"></i></button>
         <button class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></button>`
     });
+    renderPagination()
 }
+
+function renderPagination() {
+    const paginationList = $('#pagination ul');
+    paginationList.empty();
+
+    paginationList.append(`
+        <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+            <a class="page-link" href="#">Previous</a>
+        </li>`);
+
+    for (let i = 1; i <= totalPages; i++) {
+        paginationList.append(`
+            <li class="page-item ${currentPage === i ? 'active' : ''}">
+                <a class="page-link" href="#">${i}</a>
+            </li>`);
+    }
+
+    paginationList.append(`
+        <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+            <a class="page-link" href="#">Next</a>
+        </li>`);
+}
+
+
+$('.pagination').on('click', '.page-link', function(event) {
+    event.preventDefault();
+    const clickedText = $(this).text();
+
+    if (clickedText === 'Next') {
+        if (currentPage < totalPages) {
+            currentPage++;
+        }
+    } else if (clickedText === 'Previous') {
+        if (currentPage > 1) {
+            currentPage--;
+        }
+    } else {
+        currentPage = Number(clickedText);
+    }
+
+    displayTransactionsDataInTable();
+    renderPagination();
+});
+
 
 function notfication(message, type){
     $('#notification')

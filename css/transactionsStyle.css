@@ -8,3 +8,18 @@
     left: 10px;
 }
 
+.pagination .page-link{
+    color:#ffe205;
+    font-size: large;
+}
+
+.pagination .page-link:hover {
+    background-color: #e9ecef;
+    color:#f7dd18;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #facd03; 
+    border-color: #facd03;
+    color: white;              
+}
