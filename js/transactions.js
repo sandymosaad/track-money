@@ -28,6 +28,8 @@ function storeTransaction(descraiption, amount, type, date){
     localStorage.setItem(`transactions-${userName}`,JSON.stringify(transactions));
     restForm();
     $('#transactionModal').modal('hide');
+    notfication('Transaction added successfully','success');
+    displayTransactionsDataInTable();
 }
 
 function restForm(){
@@ -56,6 +58,16 @@ function displayTransactionsDataInTable(){
     });
 }
 
+function notfication(message, type){
+    $('#notification')
+    .removeClass()
+    .addClass(`alert alert-${type}`)
+    .text(message)
+    .hide()
+    .fadeIn(300)
+    .delay(2000)
+    .fadeOut(500);
+}
 
 //onclick="deleteTransaction('${transaction.descraiption}')
 
