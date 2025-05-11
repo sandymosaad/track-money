@@ -33,11 +33,11 @@
     <main>
         <h1 class="text-center py-3">Transactions</h1>
         <div class="text-center">
-            <button type="button" class="btn btn-primary text-center" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <button type="button" class="btn btn-primary text-center" data-bs-toggle="modal" data-bs-target="#transactionModal">
                 Add Transaction 
             </button>
         </div>
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="transactionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                 <div class="modal-header">
@@ -65,7 +65,7 @@
                             <option value="expense">Expense</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Add Transaction</button>
+                    <button type="submit" class="btn btn-primary" id="addTransaction">Add Transaction</button>
                     </form>
                 </div>
                 </div>
