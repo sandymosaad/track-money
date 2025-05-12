@@ -13,18 +13,19 @@ $(document).ready(function () {
 
 // get data of a new transaction 
 $('#addTransaction').on('click',function(event){
+    restForm()
     event.preventDefault()
-let descraiption = $('#description').val().trim();
+let description = $('#description').val().trim();
 let amount = $('#amount').val().trim();
-let type = $('#type').val().trim();
+//let type = $('#type').val().trim();
+let type = $('#type').val();
 let date = $('#date').val().trim();
 
-console.log(descraiption,amount,type,date);
+console.log(description,amount,type,date)
 
-storeTransaction(descraiption,amount,type,date);
-})
+storeTransaction(description,amount,type,date);})
 
-function storeTransaction(descraiption, amount, type, date){
+function storeTransaction(description, amount, type, date){
     let id;
     let transactions=JSON.parse(localStorage.getItem(`transactions-${userName}`))||[];
     //let lastId= transactions.length > 0 ? transactions[transactions.length - 1].id : 0;
@@ -34,7 +35,7 @@ function storeTransaction(descraiption, amount, type, date){
     } else{
         id=1;
     }
-    let transaction={ id,descraiption, amount, type, date };
+    let transaction={ id,description, amount, type, date };
     console.log(transaction)
     transactions.push(transaction);
     localStorage.setItem(`transactions-${userName}`,JSON.stringify(transactions));
@@ -69,13 +70,13 @@ function displayTransactionsDataInTable(){
         $(tableBody).empty();
         visibleData.forEach(transaction => {
             let row = tableBody.insertRow();
-            row.insertCell(0).textContent=transaction.descraiption;
+            row.insertCell(0).textContent=transaction.description;
             row.insertCell(1).textContent=transaction.amount;
             row.insertCell(2).textContent=transaction.date;
             //console.log(transaction.date);
             transaction.type === 'income' ? row.insertCell(3).innerHTML = `<span class="badge bg-success">Income</span>` : row.insertCell(3).innerHTML = `<span class="badge bg-danger">Expense</span>`;
             row.insertCell(4).innerHTML=`<button class="btn btn-danger btn-sm" data-id="${transaction.id}" id="deleteTransaction"><i class="fa fa-trash"></i></button>
-            <button class="btn btn-warning btn-sm" data-id='${transaction.id} id="editTransaction"'><i class="fa fa-edit"></i></button>`
+            <button class="btn btn-warning btn-sm" data-id='${transaction.id}' id="editTransaction"><i class="fa fa-edit"></i></button>`
         });
         renderPagination()
     } else{
@@ -164,8 +165,41 @@ displayTransactionsDataInTable();
 notfication('Transaction deleted successfully!', 'danger')
 }
 
+// edit transaction
+$(document).on('click','#editTransaction', function(event){
+    let id = $(this).attr('data-id');
+    console.log(id)
+    editTransaction(id);
+} )
 
+function editTransaction(id){
+$("#transactionModal").modal('show');
+$("#updateTransaction").removeClass('d-none')
+$("#toAddTransaction").addClass('d-none')
 
+let transactions = JSON.parse(localStorage.getItem(`transactions-${userName}`));
+let transaction = transactions.find(transaction=>transaction.id == id)
+//console.log(transaction)
+$('#description').val(transaction.description);
+$('#amount').val(transaction.amount);
+$('#type').val(transaction.type);
+$('#date').val(transaction.date);
+updateTransaction(id);
+}
+
+function updateTransaction(id){
+let description = $('#description').val().trim();
+let amount = $('#amount').val().trim();
+let type = $('#type').val().trim();
+let date = $('#date').val().trim();
+let transaction ={id, description, amount, type, date};
+let  transactions = JSON.parse(localStorage.getItem(`transactions-${userName}`));
+transactions= transactions.filter(transaction=> transaction.id != id);
+transactions.push(transaction);
+localStorage.setItem(`transactions-${userName}`,JSON.stringify(transactions));
+displayTransactionsDataInTable();
+notfication('Transaction updated successfully!','succss')
+}
 
 
 

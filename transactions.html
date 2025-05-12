@@ -37,8 +37,11 @@
         <div id="notification" class="d-none position-fixed top-0  "></div>
 
         <div class="text-center">
-            <button type="button" class="btn btn-warning text-center" data-bs-toggle="modal" data-bs-target="#transactionModal">
+            <button type="button" class="btn btn-warning text-center" id="toAddTransaction" data-bs-toggle="modal" data-bs-target="#transactionModal">
                 Add Transaction 
+            </button>
+            <button type="button" class="btn btn-warning text-center d-none" id="updateTransaction" data-bs-toggle="modal" data-bs-target="#transactionModal">
+                Update Transaction 
             </button>
         </div>
         <div class="modal fade" id="transactionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
