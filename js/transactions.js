@@ -25,8 +25,17 @@ storeTransaction(descraiption,amount,type,date);
 })
 
 function storeTransaction(descraiption, amount, type, date){
-    let transaction={ descraiption, amount, type, date };
+    let id;
     let transactions=JSON.parse(localStorage.getItem(`transactions-${userName}`))||[];
+    //let lastId= transactions.length > 0 ? transactions[transactions.length - 1].id : 0;
+    if ( transactions.length > 0){
+        lastId= transactions[transactions.length - 1].id ;
+        id = lastId+1;
+    } else{
+        id=1;
+    }
+    let transaction={ id,descraiption, amount, type, date };
+    console.log(transaction)
     transactions.push(transaction);
     localStorage.setItem(`transactions-${userName}`,JSON.stringify(transactions));
     restForm();
@@ -46,27 +55,33 @@ function restForm(){
 function displayTransactionsDataInTable(){
     let transactions= JSON.parse(localStorage.getItem(`transactions-${userName}`))||[];
     //console.log(transactions);
+    if (transactions.length>0){
+        $("#transactionTable").removeClass('d-none')
+        $('#noDataInTable').addClass('d-none')
+        let start = (currentPage - 1) * rowsPerPage
+        let end = start + rowsPerPage
+
+        let visibleData = transactions.slice(start, end);
+    //let tableBody= $('#transactionsTable')[0];
+        let tableBody = document.querySelector('.table tbody');
+
+        //console.log(tableBody)
+        $(tableBody).empty();
+        visibleData.forEach(transaction => {
+            let row = tableBody.insertRow();
+            row.insertCell(0).textContent=transaction.descraiption;
+            row.insertCell(1).textContent=transaction.amount;
+            row.insertCell(2).textContent=transaction.date;
+            //console.log(transaction.date);
+            transaction.type === 'income' ? row.insertCell(3).innerHTML = `<span class="badge bg-success">Income</span>` : row.insertCell(3).innerHTML = `<span class="badge bg-danger">Expense</span>`;
+            row.insertCell(4).innerHTML=`<button class="btn btn-danger btn-sm" "><i class="fa fa-trash"></i></button>
+            <button class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></button>`
+        });
+        renderPagination()
+    } else{
+        $('#noDataInTable').text('Do not have any transaction yet');
+    }
     
-    let start = (currentPage - 1) * rowsPerPage
-    let end = start + rowsPerPage
-
-    let visibleData = transactions.slice(start, end);
-   //let tableBody= $('#transactionsTable')[0];
-    let tableBody = document.querySelector('.table tbody');
-
-    //console.log(tableBody)
-    $(tableBody).empty();
-    visibleData.forEach(transaction => {
-        let row = tableBody.insertRow();
-        row.insertCell(0).textContent=transaction.descraiption;
-        row.insertCell(1).textContent=transaction.amount;
-        row.insertCell(2).textContent=transaction.date;
-        //console.log(transaction.date);
-        transaction.type === 'income' ? row.insertCell(3).innerHTML = `<span class="badge bg-success">Income</span>` : row.insertCell(3).innerHTML = `<span class="badge bg-danger">Expense</span>`;
-        row.insertCell(4).innerHTML=`<button class="btn btn-danger btn-sm" "><i class="fa fa-trash"></i></button>
-        <button class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></button>`
-    });
-    renderPagination()
 }
 
 function renderPagination() {
@@ -123,6 +138,7 @@ function notfication(message, type){
     .delay(2000)
     .fadeOut(500);
 }
+
 
 //onclick="deleteTransaction('${transaction.descraiption}')
 
