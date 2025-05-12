@@ -3,34 +3,38 @@ $(document).ready(function () {
     let userName =JSON.parse(sessionStorage.getItem("User")).userName;
     console.log(userName)
     let currentPage = 1
-    let rowsPerPage = 5
-    let transactions= JSON.parse(localStorage.getItem(`transactions-${userName}`))||[];
-    let totalPages = Math.ceil(transactions.length / rowsPerPage)
+    const rowsPerPage = 5
+    
+    // console.log(currentPage, rowsPerPage, totalPages)
     displayTransactionsDataInTable();
+            renderPagination()
 
 
 
+$('#openModelToAddTransaction').on('click', function(){
+        restForm()
+        $("#updateTransaction").addClass('d-none')
+        $("#addTransaction").removeClass('d-none')
+})
 
 // get data of a new transaction 
 $('#addTransaction').on('click',function(event){
-    restForm()
     event.preventDefault()
-let description = $('#description').val().trim();
-let amount = $('#amount').val().trim();
-//let type = $('#type').val().trim();
-let type = $('#type').val();
-let date = $('#date').val().trim();
-
-console.log(description,amount,type,date)
-
-storeTransaction(description,amount,type,date);})
+    let description = $('#description').val().trim();
+    let amount = $('#amount').val().trim();
+    //let type = $('#type').val().trim();
+    let type = $('#type').val();
+    let date = $('#date').val().trim();
+    
+    console.log(description,amount,type,date)
+    storeTransaction(description,amount,type,date);
+})
 
 function storeTransaction(description, amount, type, date){
     let id;
     let transactions=JSON.parse(localStorage.getItem(`transactions-${userName}`))||[];
-    //let lastId= transactions.length > 0 ? transactions[transactions.length - 1].id : 0;
     if ( transactions.length > 0){
-        lastId= transactions[transactions.length - 1].id ;
+        lastId= Number(transactions[transactions.length - 1].id) ;
         id = lastId+1;
     } else{
         id=1;
@@ -78,17 +82,20 @@ function displayTransactionsDataInTable(){
             row.insertCell(4).innerHTML=`<button class="btn btn-danger btn-sm" data-id="${transaction.id}" id="deleteTransaction"><i class="fa fa-trash"></i></button>
             <button class="btn btn-warning btn-sm" data-id='${transaction.id}' id="editTransaction"><i class="fa fa-edit"></i></button>`
         });
-        renderPagination()
     } else{
         $("#transactionTable").addClass('d-none')
         $("#pagination").addClass('d-none')
         $('#noDataInTable').removeClass('d-none')
         $('#noDataInTable').text('Do not have any transaction yet !');
     }
-    
+            renderPagination()
+
 }
 // pagination
 function renderPagination() {
+    let transactions= JSON.parse(localStorage.getItem(`transactions-${userName}`))||[];
+
+    let totalPages = Math.ceil(transactions.length / rowsPerPage)
     const paginationList = $('#pagination ul');
     paginationList.empty();
 
@@ -98,8 +105,8 @@ function renderPagination() {
         </li>`);
 
     for (let i = 1; i <= totalPages; i++) {
-        paginationList.append(`
-            <li class="page-item ${currentPage === i ? 'active' : ''}">
+        paginationList.append(`            
+            <li class="page-item ${currentPage === i || totalPages===1 ? 'active' : ''}">
                 <a class="page-link" href="#">${i}</a>
             </li>`);
     }
@@ -108,6 +115,7 @@ function renderPagination() {
         <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
             <a class="page-link" href="#">Next</a>
         </li>`);
+    
 }
 
 
@@ -163,43 +171,44 @@ transactions= transactions.filter(transaction=> transaction.id!= id);
 localStorage.setItem(`transactions-${userName}`,JSON.stringify(transactions));
 displayTransactionsDataInTable();
 notfication('Transaction deleted successfully!', 'danger')
+renderPagination()
 }
 
 // edit transaction
-$(document).on('click','#editTransaction', function(event){
-    let id = $(this).attr('data-id');
-    console.log(id)
-    editTransaction(id);
-} )
+// $(document).on('click','#editTransaction', function(event){
+//     let id = $(this).attr('data-id');
+//     console.log(id)
+//     editTransaction(id);
+// } )
 
-function editTransaction(id){
-$("#transactionModal").modal('show');
-$("#updateTransaction").removeClass('d-none')
-$("#toAddTransaction").addClass('d-none')
+// function editTransaction(id){
+// $("#transactionModal").modal('show');
+// $("#updateTransaction").removeClass('d-none')
+// $("#addTransaction").addClass('d-none')
 
-let transactions = JSON.parse(localStorage.getItem(`transactions-${userName}`));
-let transaction = transactions.find(transaction=>transaction.id == id)
-//console.log(transaction)
-$('#description').val(transaction.description);
-$('#amount').val(transaction.amount);
-$('#type').val(transaction.type);
-$('#date').val(transaction.date);
-updateTransaction(id);
-}
+// let transactions = JSON.parse(localStorage.getItem(`transactions-${userName}`));
+// let transaction = transactions.find(transaction=>transaction.id == id)
+// //console.log(transaction)
+// $('#description').val(transaction.description);
+// $('#amount').val(transaction.amount);
+// $('#type').val(transaction.type);
+// $('#date').val(transaction.date);
+// updateTransaction(id);
+// }
 
-function updateTransaction(id){
-let description = $('#description').val().trim();
-let amount = $('#amount').val().trim();
-let type = $('#type').val().trim();
-let date = $('#date').val().trim();
-let transaction ={id, description, amount, type, date};
-let  transactions = JSON.parse(localStorage.getItem(`transactions-${userName}`));
-transactions= transactions.filter(transaction=> transaction.id != id);
-transactions.push(transaction);
-localStorage.setItem(`transactions-${userName}`,JSON.stringify(transactions));
-displayTransactionsDataInTable();
-notfication('Transaction updated successfully!','succss')
-}
+// function updateTransaction(id){
+// let description = $('#description').val().trim();
+// let amount = $('#amount').val().trim();
+// let type = $('#type').val().trim();
+// let date = $('#date').val().trim();
+// let transaction ={id, description, amount, type, date};
+// let  transactions = JSON.parse(localStorage.getItem(`transactions-${userName}`));
+// transactions= transactions.filter(transaction=> transaction.id != id);
+// transactions.push(transaction);
+// localStorage.setItem(`transactions-${userName}`,JSON.stringify(transactions));
+// displayTransactionsDataInTable();
+// notfication('Transaction updated successfully!','succss')
+// }
 
 
 
