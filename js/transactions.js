@@ -62,7 +62,7 @@ function displayTransactionsDataInTable(){
         let end = start + rowsPerPage
 
         let visibleData = transactions.slice(start, end);
-        //let tableBody= $('#transactionsTable')[0];
+        //let tableBody= $('#tbody')[0];
         let tableBody = document.querySelector('.table tbody');
 
         //console.log(tableBody)
@@ -75,15 +75,18 @@ function displayTransactionsDataInTable(){
             //console.log(transaction.date);
             transaction.type === 'income' ? row.insertCell(3).innerHTML = `<span class="badge bg-success">Income</span>` : row.insertCell(3).innerHTML = `<span class="badge bg-danger">Expense</span>`;
             row.insertCell(4).innerHTML=`<button class="btn btn-danger btn-sm" data-id="${transaction.id}" id="deleteTransaction"><i class="fa fa-trash"></i></button>
-            <button class="btn btn-warning btn-sm" data-id='${transaction.id}'><i class="fa fa-edit"></i></button>`
+            <button class="btn btn-warning btn-sm" data-id='${transaction.id} id="editTransaction"'><i class="fa fa-edit"></i></button>`
         });
         renderPagination()
     } else{
+        $("#transactionTable").addClass('d-none')
+        $("#pagination").addClass('d-none')
+        $('#noDataInTable').removeClass('d-none')
         $('#noDataInTable').text('Do not have any transaction yet !');
     }
     
 }
-
+// pagination
 function renderPagination() {
     const paginationList = $('#pagination ul');
     paginationList.empty();
@@ -127,7 +130,7 @@ $('.pagination').on('click', '.page-link', function(event) {
     renderPagination();
 });
 
-
+// notficaton
 function notfication(message, type){
     $('#notification')
     .removeClass()
@@ -138,6 +141,8 @@ function notfication(message, type){
     .delay(2000)
     .fadeOut(500);
 }
+
+// delete transaction
 
 // $('#deleteTransaction').on('click', function(event){
 //     let id = $(this).attr('data-id')
@@ -158,6 +163,11 @@ localStorage.setItem(`transactions-${userName}`,JSON.stringify(transactions));
 displayTransactionsDataInTable();
 notfication('Transaction deleted successfully!', 'danger')
 }
+
+
+
+
+
 
 
 });
