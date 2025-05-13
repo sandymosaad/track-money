@@ -66,20 +66,12 @@ function displayTransactionsDataInTable(){
         $('#noDataInTable').addClass('d-none')
         let start = (currentPage - 1) * rowsPerPage
         let end = start + rowsPerPage
-
+        transactions.sort((a, b) => b.id - a.id);
         let visibleData = transactions.slice(start, end);
-        //let tableBody= $('#tbody')[0];
         let tableBody = document.querySelector('.table tbody');
 
-        //console.log(tableBody)
         $(tableBody).empty();
-        // visibleData = visibleData.forEach( transaction =>{
-        //     transaction.sort()
-        // }
-       // )
-
         visibleData.forEach(transaction => {
-           // transaction =transaction.sort((mix(Number(transaction.id))))
             let row = tableBody.insertRow();
             row.insertCell(0).textContent=transaction.description;
             row.insertCell(1).textContent=transaction.amount;
@@ -97,7 +89,6 @@ function displayTransactionsDataInTable(){
     }
     renderPagination();
     calculateTotalIncome();
-
 }
 // pagination
 function renderPagination() {
@@ -173,13 +164,13 @@ $(document).on('click','#deleteTransaction',function(event){
     deleteTransaction(id)
 })
 function deleteTransaction(id){
-let transactions = JSON.parse(localStorage.getItem(`transactions-${userName}`))||[];
-transactions= transactions.filter(transaction=> transaction.id!= id);
+    let transactions = JSON.parse(localStorage.getItem(`transactions-${userName}`))||[];
+    transactions= transactions.filter(transaction=> transaction.id!= id);
 
-localStorage.setItem(`transactions-${userName}`,JSON.stringify(transactions));
-displayTransactionsDataInTable();
-notfication('Transaction deleted successfully!', 'danger')
-renderPagination()
+    localStorage.setItem(`transactions-${userName}`,JSON.stringify(transactions));
+    displayTransactionsDataInTable();
+    notfication('Transaction deleted successfully!', 'danger')
+    renderPagination()
 }
 
 // edit transaction
@@ -242,25 +233,33 @@ function calculateTotalIncome(){
 }
 // cart section
 function drowChart(totalIncome,totalExpense,balance){
-let ctx1 = document.getElementById("balanceChart").getContext("2d");
-  if (chartInstance !== null) {
-        chartInstance.destroy();
+    if(totalIncome >0 || totalExpense>0){
+        $('#balanceChartPargrph').addClass('d-none')
+        $('#chart').removeClass('d-none')
+        let ctx1 = document.getElementById("balanceChart").getContext("2d");
+        if (chartInstance !== null) {
+                chartInstance.destroy();
+            }
+            chartInstance =new Chart(ctx1, {
+                type: "pie",
+                data: {
+                    labels: ['Income','Expense'],
+                    datasets: [{
+                        //label: `Balance is EL.${ balance}`,
+                        data: [totalIncome || 0,totalExpense ||0], 
+                        backgroundColor:[ '#55f091','rgb(240, 102, 102)'], 
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                }
+            });
+    }else{
+        $('#balanceChartPargrph').removeClass('d-none')
+        $('#chart').addClass('d-none')
     }
-     chartInstance =new Chart(ctx1, {
-        type: "pie",
-        data: {
-            labels: ['Income','Expense'],
-            datasets: [{
-                //label: `Balance is EL.${ balance}`,
-                data: [totalIncome,totalExpense], 
-                backgroundColor:[ '#55f091','rgb(240, 102, 102)'], 
-            }]
-        },
-        options: {
-             responsive: true,
-            maintainAspectRatio: false,
-        }
-    });
+
 
 }
     
