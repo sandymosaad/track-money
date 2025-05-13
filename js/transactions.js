@@ -8,7 +8,7 @@ $(document).ready(function () {
     // console.log(currentPage, rowsPerPage, totalPages)
     displayTransactionsDataInTable();
             renderPagination()
-
+calculateTotalIncome()
 
 
 $('#openModelToAddTransaction').on('click', function(){
@@ -72,7 +72,13 @@ function displayTransactionsDataInTable(){
 
         //console.log(tableBody)
         $(tableBody).empty();
+        // visibleData = visibleData.forEach( transaction =>{
+        //     transaction.sort()
+        // }
+       // )
+
         visibleData.forEach(transaction => {
+           // transaction =transaction.sort((mix(Number(transaction.id))))
             let row = tableBody.insertRow();
             row.insertCell(0).textContent=transaction.description;
             row.insertCell(1).textContent=transaction.amount;
@@ -88,7 +94,8 @@ function displayTransactionsDataInTable(){
         $('#noDataInTable').removeClass('d-none')
         $('#noDataInTable').text('Do not have any transaction yet !');
     }
-            renderPagination()
+    renderPagination();
+    calculateTotalIncome();
 
 }
 // pagination
@@ -175,41 +182,61 @@ renderPagination()
 }
 
 // edit transaction
-// $(document).on('click','#editTransaction', function(event){
-//     let id = $(this).attr('data-id');
-//     console.log(id)
-//     editTransaction(id);
-// } )
+$(document).on('click','#editTransaction', function(event){
+    let id = Number($(this).attr('data-id'));
+    console.log(id)
+    editTransaction(id);
+} )
 
-// function editTransaction(id){
-// $("#transactionModal").modal('show');
-// $("#updateTransaction").removeClass('d-none')
-// $("#addTransaction").addClass('d-none')
+function editTransaction(id){
+    $("#transactionModal").modal('show');
+    $("#updateTransaction").removeClass('d-none')
+    $("#addTransaction").addClass('d-none')
 
-// let transactions = JSON.parse(localStorage.getItem(`transactions-${userName}`));
-// let transaction = transactions.find(transaction=>transaction.id == id)
-// //console.log(transaction)
-// $('#description').val(transaction.description);
-// $('#amount').val(transaction.amount);
-// $('#type').val(transaction.type);
-// $('#date').val(transaction.date);
-// updateTransaction(id);
-// }
+    let transactions = JSON.parse(localStorage.getItem(`transactions-${userName}`));
+    let transaction = transactions.find(transaction=>transaction.id == id)
+    //console.log(transaction)
+    $('#description').val(transaction.description);
+    $('#amount').val(transaction.amount);
+    $('#type').val(transaction.type);
+    $('#date').val(transaction.date);
+    this.id=id;
+}
 
-// function updateTransaction(id){
-// let description = $('#description').val().trim();
-// let amount = $('#amount').val().trim();
-// let type = $('#type').val().trim();
-// let date = $('#date').val().trim();
-// let transaction ={id, description, amount, type, date};
-// let  transactions = JSON.parse(localStorage.getItem(`transactions-${userName}`));
-// transactions= transactions.filter(transaction=> transaction.id != id);
-// transactions.push(transaction);
-// localStorage.setItem(`transactions-${userName}`,JSON.stringify(transactions));
-// displayTransactionsDataInTable();
-// notfication('Transaction updated successfully!','succss')
-// }
+$('#updateTransaction').on('click', function(){
 
+    let description = $('#description').val().trim();
+    let amount = $('#amount').val().trim();
+    let type = $('#type').val().trim();
+    let date = $('#date').val().trim();
+    let transaction ={id, description, amount, type, date};
+    let  transactions = JSON.parse(localStorage.getItem(`transactions-${userName}`));
+    transactions= transactions.filter(transaction=> transaction.id != id);
+    transactions.push(transaction);
+    localStorage.setItem(`transactions-${userName}`,JSON.stringify(transactions));
+    displayTransactionsDataInTable();
+    notfication('Transaction updated successfully!','succss')
+})
+
+function calculateTotalIncome(){
+    let transactions = JSON.parse(localStorage.getItem(`transactions-${userName}`))||[];
+    let totalIncome= 0;
+    let totalExpense= 0;
+    for (i=0; i<transactions.length ; i++){
+        if (transactions[i].type=== 'income'){
+            totalIncome += Number(transactions[i].amount);
+        }else {
+            totalExpense+= Number(transactions[i].amount);
+        }
+    }
+        let balance = totalIncome -totalExpense;
+
+    //console.log(totalExpense, totalIncome, balance)
+    $('.card-income .card-text').text('EL.'+totalIncome);
+    $('.card-expense .card-text').text('EL.'+totalExpense);
+    $('.card-balance .card-text').text('EL.'+balance);
+
+}
 
 
 
