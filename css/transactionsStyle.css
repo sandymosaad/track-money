@@ -16,10 +16,17 @@
 .pagination .page-link:hover {
     background-color: #e9ecef;
     color:#f7dd18;
+ 
 }
 
 .pagination .page-item.active .page-link {
     background-color: #facd03; 
     border-color: #facd03;
     color: white;              
+}
+
+#balanceChart{
+      width: 100% !important;
+    max-width: 220px; 
+    height: auto !important;
 }

@@ -36,7 +36,7 @@
         <h1 class="text-center py-3">Transactions</h1>
         <div id="notification" class="d-none position-fixed top-0  "></div>
 
-        <section class="d-flex">
+        <section class="d-flex justify-content-evenly">
             <div class="col-md-6">
                 <div class="row">
                     <div class="col-md-6">
@@ -65,8 +65,9 @@
                     </div>
                 </div>
             </div>
-            <div  class="col-md-6">
-                <canvas id="transaction"></canvas>
+            <div  class="col-md-6 align-items-center">
+                <canvas id="balanceChart" ></canvas>
+                <!-- <p id="balanceChartPargrph">Balance is </p> -->
             </div>  
         </section>
 
@@ -138,6 +139,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script src="js/transactions.js"></script>
 </body>
 </html>

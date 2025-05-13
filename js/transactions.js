@@ -4,11 +4,12 @@ $(document).ready(function () {
     console.log(userName)
     let currentPage = 1
     const rowsPerPage = 5
-    
+    let chartInstance = null;
+
     // console.log(currentPage, rowsPerPage, totalPages)
     displayTransactionsDataInTable();
-            renderPagination()
-calculateTotalIncome()
+    renderPagination()
+    calculateTotalIncome()
 
 
 $('#openModelToAddTransaction').on('click', function(){
@@ -218,6 +219,7 @@ $('#updateTransaction').on('click', function(){
     notfication('Transaction updated successfully!','succss')
 })
 
+// card section
 function calculateTotalIncome(){
     let transactions = JSON.parse(localStorage.getItem(`transactions-${userName}`))||[];
     let totalIncome= 0;
@@ -236,8 +238,31 @@ function calculateTotalIncome(){
     $('.card-expense .card-text').text('EL.'+totalExpense);
     $('.card-balance .card-text').text('EL.'+balance);
 
+    drowChart(totalIncome , totalExpense, balance)
 }
+// cart section
+function drowChart(totalIncome,totalExpense,balance){
+let ctx1 = document.getElementById("balanceChart").getContext("2d");
+  if (chartInstance !== null) {
+        chartInstance.destroy();
+    }
+     chartInstance =new Chart(ctx1, {
+        type: "pie",
+        data: {
+            labels: ['Income','Expense'],
+            datasets: [{
+                //label: `Balance is EL.${ balance}`,
+                data: [totalIncome,totalExpense], 
+                backgroundColor:[ '#55f091','rgb(240, 102, 102)'], 
+            }]
+        },
+        options: {
+             responsive: true,
+            maintainAspectRatio: false,
+        }
+    });
 
-
+}
+    
 
 });
