@@ -74,7 +74,7 @@ function displayTransactionsDataInTable(){
         visibleData.forEach(transaction => {
             let row = tableBody.insertRow();
             row.insertCell(0).textContent=transaction.description;
-            row.insertCell(1).textContent=transaction.amount;
+            row.insertCell(1).textContent='EL.'+ transaction.amount;
             row.insertCell(2).textContent=transaction.date;
             //console.log(transaction.date);
             transaction.type === 'income' ? row.insertCell(3).innerHTML = `<span class="badge bg-success">Income</span>` : row.insertCell(3).innerHTML = `<span class="badge bg-danger">Expense</span>`;
@@ -222,8 +222,9 @@ function calculateTotalIncome(){
             totalExpense+= Number(transactions[i].amount);
         }
     }
-        let balance = totalIncome -totalExpense;
-
+    let balance = totalIncome -totalExpense;
+    let userMoney ={totalIncome , totalExpense ,balance}
+    localStorage.setItem(`${userName}-money`,JSON.stringify(userMoney))
     //console.log(totalExpense, totalIncome, balance)
     $('.card-income .card-text').text('EL.'+totalIncome);
     $('.card-expense .card-text').text('EL.'+totalExpense);
