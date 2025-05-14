@@ -14,8 +14,9 @@ $(document).ready(function () {
 
 $('#openModelToAddTransaction').on('click', function(){
         restForm()
-        $("#updateTransaction").addClass('d-none')
-        $("#addTransaction").removeClass('d-none')
+        $("#updateTransaction").addClass('d-none');
+        $("#addTransaction").removeClass('d-none');
+        $('#validationData').addClass('d-none');
 })
 
 // get data of a new transaction 
@@ -28,9 +29,22 @@ $('#addTransaction').on('click',function(event){
     let date = $('#date').val().trim();
     
     console.log(description,amount,type,date)
-    storeTransaction(description,amount,type,date);
+    validtion(description,amount,type,date)
 })
 
+function validtion(description,amount,type,date){
+    if(!amount || !description || !date || !type){
+        $('#validationData').removeClass('d-none');
+        $('#validationData').append(`<p class="text-center py-3 m-5 alert alert-warning">Please Enter Data In All Fileds!</p>`)
+    }else{
+        if(amount<=0){
+            $('#validationData').removeClass('d-none');
+            $('#validationData').append(`<p class="text-center py-3 m-5 alert alert-warning">Please Enter Positive Number At Amount!</p>`)
+        }else{
+        storeTransaction(description,amount,type,date);
+        }
+    }
+}
 function storeTransaction(description, amount, type, date){
     let id;
     let transactions=JSON.parse(localStorage.getItem(`transactions-${userName}`))||[];
@@ -81,12 +95,12 @@ function displayTransactionsDataInTable(){
             row.insertCell(4).innerHTML=`<button class="btn btn-danger btn-sm" data-id="${transaction.id}" id="deleteTransaction"><i class="fa fa-trash"></i></button>
             <button class="btn btn-warning btn-sm" data-id='${transaction.id}' id="editTransaction"><i class="fa fa-edit"></i></button>`
         });
-    } else{
-        $("#transactionTable").addClass('d-none')
-        $("#pagination").addClass('d-none')
-        $('#noDataInTable').removeClass('d-none')
-        $('#noDataInTable').text('Do not have any transaction yet !');
-    }
+        } else{
+            $("#transactionTable").addClass('d-none')
+            $("#pagination").addClass('d-none')
+            $('#noDataInTable').removeClass('d-none')
+            $('#noDataInTable').text('Do not have any transaction yet !');
+        }
     renderPagination();
     calculateTotalIncome();
 }
@@ -263,6 +277,7 @@ function drowChart(totalIncome,totalExpense,balance){
 
 
 }
-    
+
+
 
 });
