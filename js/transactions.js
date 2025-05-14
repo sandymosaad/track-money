@@ -14,26 +14,35 @@ $(document).ready(function () {
 
 $('#openModelToAddTransaction').on('click', function(){
         restForm()
+        $('#kindDropdown').html(`<i class="fa-solid fa-utensils me-2 text-warning"></i> Food & Groceries`)
         $("#updateTransaction").addClass('d-none');
         $("#addTransaction").removeClass('d-none');
         $('#validationData').addClass('d-none');
 })
 
+
 // get data of a new transaction 
+$('#kindOptions .dropdown-item').on('click' , function(event){
+    event.preventDefault();
+        $('#kindDropdown').html($(this).html());
+    $('#selectedKind').val($(this).attr('data-value')) ;
+})
+
 $('#addTransaction').on('click',function(event){
     event.preventDefault()
     let description = $('#description').val().trim();
-    let amount = $('#amount').val().trim();
+    let amount = Number($('#amount').val().trim());
     //let type = $('#type').val().trim();
     let type = $('#type').val();
     let date = $('#date').val().trim();
-    
-    console.log(description,amount,type,date)
-    validtion(description,amount,type,date)
+    let kind = $('#selectedKind').val().trim();
+
+    console.log(kind,description,amount,type,date)
+    validtion(kind,description,amount,type,date)
 })
 
-function validtion(description,amount,type,date){
-    if(!amount || !description || !date || !type){
+function validtion(kind,description,amount,type,date){
+    if(!amount || !description || !date || !type || !kind){
         $('#validationData').removeClass('d-none');
         $('#validationData').append(`<p class="text-center py-3 m-5 alert alert-warning">Please Enter Data In All Fileds!</p>`)
     }else{
@@ -41,11 +50,11 @@ function validtion(description,amount,type,date){
             $('#validationData').removeClass('d-none');
             $('#validationData').append(`<p class="text-center py-3 m-5 alert alert-warning">Please Enter Positive Number At Amount!</p>`)
         }else{
-        storeTransaction(description,amount,type,date);
+        storeTransaction(kind,description,amount,type,date);
         }
     }
 }
-function storeTransaction(description, amount, type, date){
+function storeTransaction(kind,description, amount, type, date){
     let id;
     let transactions=JSON.parse(localStorage.getItem(`transactions-${userName}`))||[];
     if ( transactions.length > 0){
@@ -54,7 +63,7 @@ function storeTransaction(description, amount, type, date){
     } else{
         id=1;
     }
-    let transaction={ id,description, amount, type, date };
+    let transaction={ id, kind, description, amount, type, date };
     console.log(transaction)
     transactions.push(transaction);
     localStorage.setItem(`transactions-${userName}`,JSON.stringify(transactions));
@@ -87,12 +96,13 @@ function displayTransactionsDataInTable(){
         $(tableBody).empty();
         visibleData.forEach(transaction => {
             let row = tableBody.insertRow();
-            row.insertCell(0).textContent=transaction.description;
-            row.insertCell(1).textContent='EL.'+ transaction.amount;
-            row.insertCell(2).textContent=transaction.date;
+            row.insertCell(0).textContent=transaction.kind;
+            row.insertCell(1).textContent=transaction.description;
+            row.insertCell(2).textContent='EL.'+ transaction.amount;
+            row.insertCell(3).textContent=transaction.date;
             //console.log(transaction.date);
-            transaction.type === 'income' ? row.insertCell(3).innerHTML = `<span class="badge bg-success">Income</span>` : row.insertCell(3).innerHTML = `<span class="badge bg-danger">Expense</span>`;
-            row.insertCell(4).innerHTML=`<button class="btn btn-danger btn-sm" data-id="${transaction.id}" id="deleteTransaction"><i class="fa fa-trash"></i></button>
+            transaction.type === 'income' ? row.insertCell(3).innerHTML = `<span class="badge bg-success">Income</span>` : row.insertCell(4).innerHTML = `<span class="badge bg-danger">Expense</span>`;
+            row.insertCell(5).innerHTML=`<button class="btn btn-danger btn-sm" data-id="${transaction.id}" id="deleteTransaction"><i class="fa fa-trash"></i></button>
             <button class="btn btn-warning btn-sm" data-id='${transaction.id}' id="editTransaction"><i class="fa fa-edit"></i></button>`
         });
         } else{
@@ -206,16 +216,25 @@ function editTransaction(id){
     $('#amount').val(transaction.amount);
     $('#type').val(transaction.type);
     $('#date').val(transaction.date);
+    $('#selectedKind').val(transaction.kind)
+
+    //let selectedKind = transaction.kind;
+    let dropdownlist = document.querySelectorAll('#kindOptions .dropdown-item');
+    dropdownlist.forEach(item => {
+        if (item.getAttribute('data-value') === transaction.kind) {
+            $('#kindDropdown').html(item.innerHTML);
+        }
+    });
     this.id=id;
 }
 
 $('#updateTransaction').on('click', function(){
-
     let description = $('#description').val().trim();
-    let amount = $('#amount').val().trim();
+    let amount = Number($('#amount').val().trim());
     let type = $('#type').val().trim();
     let date = $('#date').val().trim();
-    let transaction ={id, description, amount, type, date};
+    let kind = $('#selectedKind').val().trim();
+    let transaction ={id, kind, description, amount, type, date};
     let  transactions = JSON.parse(localStorage.getItem(`transactions-${userName}`));
     transactions= transactions.filter(transaction=> transaction.id != id);
     transactions.push(transaction);
@@ -277,6 +296,7 @@ function drowChart(totalIncome,totalExpense,balance){
 
 
 }
+
 
 
 

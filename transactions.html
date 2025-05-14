@@ -88,28 +88,55 @@
                     </div>
                     <div class="modal-body">
                         <form>
-                        <div class="mb-3">
-                            <label for="description" class="form-label">Description</label>
-                            <input type="text" class="form-control" id="description">
-                        </div>
-                        <div class="mb-3">
-                            <label for="amount" class="form-label">Amount</label>
-                            <input type="number" class="form-control" id="amount">
-                        </div>
-                        <div class="mb-3">
-                            <label for="date" class="form-label">Date</label>
-                            <input type="date" class="form-control" id="date">
-                        </div>
-                        <div class="mb-3">
-                            <label for="type" class="form-label">Type</label>
-                            <select class="form-select" id="type">
-                                <option value="income">Income</option>
-                                <option value="expense">Expense</option>
-                            </select>
-                        </div>
-                        <div id="validationData"> </div>
-                        <button type="submit" class="btn btn-warning" id="addTransaction">Add Transaction</button>
-                        <button type="submit" class="btn btn-warning d-none" id="updateTransaction">Update Transaction </button>
+                            <div class="dropdown mb-3">
+                                <label class="form-label d-block">Kind of Transaction</label>
+                                <button class="btn btn-outline-warning dropdown-toggle w-100 text-start" type="button" id="kindDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-solid fa-utensils me-2 text-warning"></i> Food & Groceries
+                                </button>
+                                <ul class="dropdown-menu w-100" aria-labelledby="kindDropdown" id="kindOptions">
+                                    <li><a class="dropdown-item" href="#" data-value="food"><i class="fa-solid fa-utensils me-2 text-warning"></i> Food & Groceries</a></li>
+                                    <li><a class="dropdown-item" href="#" data-value="rent"><i class="fa-solid fa-home me-2 text-warning"></i> Rent & Housing</a></li>
+                                    <li><a class="dropdown-item" href="#" data-value="transportation"><i class="fa-solid fa-car me-2 text-warning"></i> Transportation</a></li>
+                                    <li><a class="dropdown-item" href="#" data-value="communication"><i class="fa-solid fa-phone me-2 text-warning"></i> Communication</a></li>
+                                    <li><a class="dropdown-item" href="#" data-value="entertainment"><i class="fa-solid fa-film me-2 text-warning"></i> Entertainment</a></li>
+                                    <li><a class="dropdown-item" href="#" data-value="gifts"><i class="fa-solid fa-gift me-2 text-warning"></i> Gifts</a></li>
+                                    <li><a class="dropdown-item" href="#" data-value="debts"><i class="fa-solid fa-file-invoice-dollar me-2 text-warning"></i> Debts & Loans</a></li>
+                                    <li><a class="dropdown-item" href="#" data-value="health"><i class="fa-solid fa-notes-medical me-2 text-warning"></i> Health</a></li>
+                                    <li><a class="dropdown-item" href="#" data-value="clothing"><i class="fa-solid fa-shirt me-2 text-warning"></i> Clothing</a></li>
+                                    <li><a class="dropdown-item" href="#" data-value="education"><i class="fa-solid fa-book me-2 text-warning"></i> Education</a></li>
+                                    <li><a class="dropdown-item" href="#" data-value="shopping"><i class="fa-solid fa-shopping-bag me-2 text-warning"></i> General Shopping</a></li>
+                                    <li><a class="dropdown-item" href="#" data-value="work"><i class="fa-solid fa-briefcase me-2 text-warning"></i> Work & Projects</a></li>
+                                    <li><a class="dropdown-item" href="#" data-value="pets"><i class="fa-solid fa-paw me-2 text-warning"></i> Pets</a></li>
+                                    <li><a class="dropdown-item" href="#" data-value="travel"><i class="fa-solid fa-plane me-2 text-warning"></i> Travel</a></li>
+                                    <li><a class="dropdown-item" href="#" data-value="personal"><i class="fa-solid fa-spa me-2 text-warning"></i> Personal Care</a></li>
+                                    <li><a class="dropdown-item" href="#" data-value="savings"><i class="fa-solid fa-piggy-bank me-2 text-warning"></i> Savings</a></li>
+                                </ul>
+
+                                <!-- Hidden input to store selected value -->
+                                <input type="hidden" name="kind" id="selectedKind" value="food">
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <input type="text" class="form-control" id="description">
+                            </div>
+                            <div class="mb-3">
+                                <label for="amount" class="form-label">Amount</label>
+                                <input type="number" class="form-control" id="amount">
+                            </div>
+                            <div class="mb-3">
+                                <label for="date" class="form-label">Date</label>
+                                <input type="date" class="form-control" id="date">
+                            </div>
+                            <div class="mb-3">
+                                <label for="type" class="form-label">Type</label>
+                                <select class="form-select" id="type">
+                                    <option value="income">Income</option>
+                                    <option value="expense">Expense</option>
+                                </select>
+                            </div>
+                            <div id="validationData"> </div>
+                            <button type="submit" class="btn btn-warning" id="addTransaction">Add Transaction</button>
+                            <button type="submit" class="btn btn-warning d-none" id="updateTransaction">Update Transaction </button>
                         </form>
                     </div>
                     </div>
@@ -120,6 +147,7 @@
                 <table class="table table-striped d-none" id="transactionTable">
                     <thead>
                         <tr>
+                            <th scope="col">Kind</th>
                             <th scope="col">Description</th>
                             <th scope="col">Amount</th>
                             <th scope="col">Date</th>
