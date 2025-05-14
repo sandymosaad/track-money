@@ -5,6 +5,7 @@ let expense = JSON.parse(localStorage.getItem(`money-${userName}`)).totalExpense
 let budget = JSON.parse (localStorage.getItem(`budget-${userName}`));
 displayBudgetDataAtCard();
 
+// show card if user allready had enterd budget 
 if(budget){
     $('#budget-card').removeClass('d-none');
     $('#openModelToAddBudget').text('Edit Budget')
@@ -28,12 +29,30 @@ $('#addBudget').on('click' , function(event){
     displayBudgetDataAtCard();
 })
 
+
 function displayBudgetDataAtCard(){
-    
     $('#card-p-budget').text(`${budget}`);
     $('#card-p-expense').text(expense);
-
 }
+// edit budget
+$('#openModelToAddBudget').on('click', function(){
+    if(budget){
+        $('#updateBudget').removeClass('d-none');
+        $('#addBudget').addClass('d-none');
+        $('#budgetInput').val(budget);
+    }else{
+        $('#updateBudget').addClass('d-none');
+        $('#addBudget').removeClass('d-none');
+        $('#budgetInput').val(0);
+    }
+})
+
+$('#updateBudget').on('click' , function(){
+    budget = Number($('#budgetInput').val().trim());
+    localStorage.setItem(`budget-${userName}` , JSON.stringify(budget));
+    displayBudgetDataAtCard();
+})
+
 
 
 
