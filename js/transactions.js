@@ -257,7 +257,7 @@ function calculateTotalIncome(){
     }
     let balance = totalIncome -totalExpense;
     let userMoney ={totalIncome , totalExpense ,balance}
-    localStorage.setItem(`${userName}-money`,JSON.stringify(userMoney))
+    localStorage.setItem(`money-${userName}`,JSON.stringify(userMoney))
     //console.log(totalExpense, totalIncome, balance)
     $('.card-income .card-text').text('EL.'+totalIncome);
     $('.card-expense .card-text').text('EL.'+totalExpense);

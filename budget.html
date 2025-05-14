@@ -39,43 +39,47 @@
                 </div>
             </div>
         </div>
+
+
         <div class="d-flex justify-content-evenly">
             <section>
                 <img src="assets/images/budget.png" alt="budget">
             </section>
             <section>
-                    <h2>Month's budget</h2>
-                    <div class="mt-5">
-                        <div class="card">
-                            <div class="card-title">
-                                <div class="card-body">
-                                    <div class="card-text">
-                                        <h3>Your Budget :</h3>  <p>536</p>
-                                        <h3>Your Expense :</h3>  <p>56</p>
-                                    </div>
+                <h2 id="monthName">Month's Budget</h2>
+                <!--card of data-->
+                <div class="mt-5 d-none" id="budget-card" >
+                    <div class="card">
+                        <div class="card-title">
+                            <div class="card-body">
+                                <div class="card-text">
+                                    <h3 >Your Budget :</h3>  <p id="card-p-budget"></p>
+                                    <h3 >Your Expense :</h3>  <p id="card-p-expense"></p>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
+                <!--model-->
                 <div class="text-center m-3">
-                    <button type="button" class="btn btn-warning text-center" id="openModelToAddTransaction" data-bs-toggle="modal" data-bs-target="#transactionModal">
+                    <button type="button" class="btn btn-warning text-center" id="openModelToAddBudget" data-bs-toggle="modal" data-bs-target="#budgetModal">
                         Add Budget  
                     </button>
                 </div>
-                            <div class="modal fade" id="transactionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="budgetModal" tabindex="-1" aria-labelledby="budgetModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Your Budget</h5>
+                            <h5 class="modal-title" id="budgetModalLabel">Your Budget</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <form>
                                 <div class="mb-3">
-                                    <label for="budget" class="form-label">Budget</label>
-                                    <input type="number" id="budget" name="budget">
+                                    <label for="budgetInput" class="form-label">Budget</label>
+                                    <input type="number" id="budgetInput" class="form-control" name="budget">
                                 </div>
-                                <div id="validationData"> </div>
+                                <div id="validationData" class="d-none"> </div>
                                 <button type="submit" class="btn btn-warning" id="addBudget">Add Budget</button>
                                 <button type="submit" class="btn btn-warning d-none" id="updateBudget">Update Budget </button>
                             </form>
