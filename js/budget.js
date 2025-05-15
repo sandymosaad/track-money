@@ -74,7 +74,7 @@ if (percentage <50){
     $('#budgetProgress').removeClass().addClass('progress-bar bg-danger')
 }
 
-if(percentage>=80 && percentage<100) notification('Be Carfull your Expense rached 90% from your Budget')
+if(percentage>=80 && percentage<100) notification(`Be Carfull your Expense rached ${percentage}% from your Budget`)
 if(percentage >=100 ) notification('Be Carfull your Expense greater than your Budget')
 
 }
