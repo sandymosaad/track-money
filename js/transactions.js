@@ -9,7 +9,7 @@ $(document).ready(function () {
     // console.log(currentPage, rowsPerPage, totalPages)
     displayTransactionsDataInTable();
     renderPagination()
-    calculateTotalIncome()
+    calculateTotalIncomeForThisMonth()
 
 
 $('#openModelToAddTransaction').on('click', function(){
@@ -134,7 +134,7 @@ function displayTransactionsDataInTable(){
             $('#noDataInTable').text('Do not have any transaction yet !');
         }
     renderPagination();
-    calculateTotalIncome();
+    calculateTotalIncomeForThisMonth();
 }
 // pagination
 function totalPagesFunction(){
@@ -147,7 +147,6 @@ function renderPagination() {
     let totalPages  = totalPagesFunction();
     const paginationList = $('#pagination ul');
     paginationList.empty();
-
     paginationList.append(`
         <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
             <a class="page-link" href="#">Previous</a>
@@ -271,28 +270,30 @@ $('#updateTransaction').on('click', function(){
     notfication('Transaction updated successfully!','succss')
 })
 
-// card section
-function calculateTotalIncome(){
+// card section This
+function calculateTotalIncomeForThisMonth(){
     let transactions = JSON.parse(localStorage.getItem(`transactions-${userName}`))||[];
     let totalIncome= 0;
     let totalExpense= 0;
+    let monthName = new Date().toLocaleDateString('en-US', {month:'long'});
+
     for (i=0; i<transactions.length ; i++){
-        if (transactions[i].type=== 'income'){
+        if (transactions[i].type=== 'income' && transactions[i].monthName === monthName){
             totalIncome += Number(transactions[i].amount);
-        }else {
+        }else if(transactions[i].type=== 'expense' && transactions[i].monthName === monthName) {
             totalExpense+= Number(transactions[i].amount);
         }
     }
     let balance = totalIncome -totalExpense;
     let userMoney ={totalIncome , totalExpense ,balance}
-    localStorage.setItem(`money-${userName}`,JSON.stringify(userMoney))
+    localStorage.setItem(`money-${monthName}-${userName}`,JSON.stringify(userMoney))
     //console.log(totalExpense, totalIncome, balance)
     $('.card-income .card-text').text('EL.'+totalIncome);
     $('.card-expense .card-text').text('EL.'+totalExpense);
     $('.card-balance .card-text').text('EL.'+balance);
-
     drowChart(totalIncome , totalExpense, balance)
 }
+
 // cart section
 function drowChart(totalIncome,totalExpense,balance){
     if(totalIncome >0 || totalExpense>0){

@@ -1,11 +1,13 @@
 $(document).ready(function () {
 
 let userName =JSON.parse( sessionStorage.getItem('User')).userName;
-let expense = JSON.parse(localStorage.getItem(`money-${userName}`)).totalExpense;
+let monthName = new Date().toLocaleDateString('en-US', {month:'long'});
+let expense = JSON.parse(localStorage.getItem(`money-${monthName}-${userName}`)).totalExpense;
 let budget = JSON.parse (localStorage.getItem(`budget-${userName}`));
 displayBudgetDataAtCard();
 updatedBudgetProgress(budget ,expense);
 
+$('#monthName').text(`${monthName}'s Budget`)
 // show card if user allready had enterd budget 
 if(budget){
     $('#budget-card').removeClass('d-none');

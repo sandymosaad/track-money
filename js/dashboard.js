@@ -5,8 +5,8 @@ document.querySelector('.welcomedUser').textContent=`Welcome ${userName} in your
 
 
 // income,expense,balance data
-
-let userMoney = JSON.parse(localStorage.getItem(`money-${userName}`));
+let monthName = new Date().toLocaleDateString('en-US', {month:'long'});
+let userMoney = JSON.parse(localStorage.getItem(`money-${monthName}-${userName}`));
 
 //console.log(userMoney)
 document.querySelector('.card-income .card-text').textContent="EL."+userMoney.totalIncome;
