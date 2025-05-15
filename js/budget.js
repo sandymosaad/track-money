@@ -34,7 +34,7 @@ $('#addBudget').on('click' , function(event){
 function displayBudgetDataAtCard(){
     $('#card-p-budget').text(`LE.${budget}`);
     $('#card-p-expense').text(`LE.${expense}`);
-    $('#card-p-remaing').text(`LE.${budget-expense}`);
+    $('#card-p-remaining').text(`LE.${budget-expense}`);
     updatedBudgetProgress(budget,expense)
 }
 // edit budget

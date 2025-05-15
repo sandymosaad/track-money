@@ -1,5 +1,5 @@
 $(document).ready(function () {
-// get user name
+    // get user name
     let userName =JSON.parse(sessionStorage.getItem("User")).userName;
     console.log(userName)
     let currentPage = 1
@@ -38,19 +38,35 @@ $('#addTransaction').on('click',function(event){
     let kind = $('#selectedKind').val().trim();
 
     console.log(kind,description,amount,type,date)
-    validtion(kind,description,amount,type,date)
+    validtion(kind,description,amount,date,type)
 })
 
-function validtion(kind,description,amount,type,date){
+function validtion(kind,description,amount,date,type){
+    let today = new Date();
+    today.setHours(0, 0, 0, 0);
+    let transactionDate = new Date(date);
+    transactionDate.setHours(0, 0, 0, 0);
+
     if(!amount || !description || !date || !type || !kind){
         $('#validationData').removeClass('d-none');
-        $('#validationData').append(`<p class="text-center py-3 m-5 alert alert-warning">Please Enter Data In All Fileds!</p>`)
+        $('#allDataError').removeClass('d-none');
     }else{
-        if(amount<=0){
-            $('#validationData').removeClass('d-none');
-            $('#validationData').append(`<p class="text-center py-3 m-5 alert alert-warning">Please Enter Positive Number At Amount!</p>`)
+        if((amount>0) && (transactionDate.getTime()<=today.getTime())){
+            $('#validationData').addClass('d-none');
+            //$('#allDataError').addClass('d-none');
+            storeTransaction(kind,description,amount,type,date);
         }else{
-        storeTransaction(kind,description,amount,type,date);
+            if(amount<=0){
+                $('#validationData').removeClass('d-none');
+                $('#amountError').removeClass('d-none');
+            }else{
+                $('#amountError').addClass('d-none');
+            }
+            if (transactionDate.getTime() > today.getTime()){
+            $('#dateError').removeClass('d-none');
+            }else{
+                $('#dateError').addClass('d-none');
+            }
         }
     }
 }
@@ -63,7 +79,13 @@ function storeTransaction(kind,description, amount, type, date){
     } else{
         id=1;
     }
-    let transaction={ id, kind, description, amount, type, date };
+    let fullDate = new Date(date);
+    let year = fullDate.getFullYear();
+    //let month = fullDate.getMonth() + 1;
+    let monthName = fullDate.toLocaleDateString('en-US', {month:'long'});
+    let transaction={ id, kind, description, amount, type, date, year, monthName };
+
+    //console.log(year ,month ,monthName  )
     console.log(transaction)
     transactions.push(transaction);
     localStorage.setItem(`transactions-${userName}`,JSON.stringify(transactions));

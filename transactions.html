@@ -34,7 +34,8 @@
         
 
         <h1 class="text-center py-3">Transactions</h1>
-        <div id="notification" class="d-none position-fixed top-0  "></div>
+        <div id="notification" class="d-none position-fixed top-0  ">
+        </div>
         <section class="d-flex justify-content-evenly">
             <div class="col-md-6">
                 <div class="row">
@@ -134,7 +135,11 @@
                                     <option value="expense">Expense</option>
                                 </select>
                             </div>
-                            <div id="validationData"> </div>
+                            <div id="validationData" class="text-center py-3 m-5 alert alert-warning">
+                                <p id="allDataError" class="d-none">Please Enter Data In All Fileds!</p>
+                                <p id="amountError" class="d-none">Please Enter Positive Number At Amount!</p>
+                                <p id="dateError" class="d-none">Enter Vaild Date!</p>    
+                            </div>
                             <button type="submit" class="btn btn-warning" id="addTransaction">Add Transaction</button>
                             <button type="submit" class="btn btn-warning d-none" id="updateTransaction">Update Transaction </button>
                         </form>
