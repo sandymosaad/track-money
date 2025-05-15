@@ -32,8 +32,9 @@ $('#addBudget').on('click' , function(event){
 
 
 function displayBudgetDataAtCard(){
-    $('#card-p-budget').text(`${budget}`);
-    $('#card-p-expense').text(expense);
+    $('#card-p-budget').text(`LE.${budget}`);
+    $('#card-p-expense').text(`LE.${expense}`);
+    $('#card-p-remaing').text(`LE.${budget-expense}`);
     updatedBudgetProgress(budget,expense)
 }
 // edit budget
@@ -73,9 +74,20 @@ if (percentage <50){
     $('#budgetProgress').removeClass().addClass('progress-bar bg-danger')
 }
 
+if(percentage>=80 && percentage<100) notification('Be Carfull your Expense rached 90% from your Budget')
+if(percentage >=100 ) notification('Be Carfull your Expense greater than your Budget')
 
 }
-
+function notification (msg){
+$('#notification')
+.removeClass(   )
+.addClass('alert alert-danger')
+.text(msg)
+.hide()
+.fadeIn(300)
+.delay(3000)
+.fadeOut(500);
+}
 
 
 

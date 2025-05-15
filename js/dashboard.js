@@ -5,12 +5,10 @@ document.querySelector('.welcomedUser').textContent=`Welcome ${userName} in your
 
 
 // income,expense,balance data
-// let income=1000;
-// let expense=300;
-// let balance=income-expense;
-let userMoney = JSON.parse(localStorage.getItem(`${userName}-money`));
 
+let userMoney = JSON.parse(localStorage.getItem(`money-${userName}`));
 
+//console.log(userMoney)
 document.querySelector('.card-income .card-text').textContent="EL."+userMoney.totalIncome;
 document.querySelector('.card-expense .card-text').textContent="EL."+userMoney.totalExpense;
 document.querySelector('.card-balance .card-text').textContent="EL."+userMoney.balance;

@@ -31,6 +31,7 @@
 
     <main class="mt-5 container">
         <h1 class="text-center text-warning">Budget</h1>
+        <div id="notification" class="d-none position-fixed top-0  "></div>
         <div class="mb-3">
             <label>Budget Usage</label>
             <div class="progress">
@@ -53,8 +54,9 @@
                         <div class="card-title">
                             <div class="card-body">
                                 <div class="card-text">
-                                    <h3 >Your Budget :</h3>  <p id="card-p-budget"></p>
-                                    <h3 >Your Expense :</h3>  <p id="card-p-expense"></p>
+                                    <h3 >Your Budget :</h3>  <p id="card-p-budget" class="badge bg-warning"></p>
+                                    <h3 >Your Expense :</h3>  <p id="card-p-expense" class="badge bg-danger"></p>
+                                    <h3 >Remaing :</h3>  <p id="card-p-remaing" class="badge bg-success"></p>
                                 </div>
                             </div>
                         </div>
