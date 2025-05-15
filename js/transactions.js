@@ -123,7 +123,7 @@ function displayTransactionsDataInTable(){
             row.insertCell(2).textContent='EL.'+ transaction.amount;
             row.insertCell(3).textContent=transaction.date;
             //console.log(transaction.date);
-            transaction.type === 'income' ? row.insertCell(3).innerHTML = `<span class="badge bg-success">Income</span>` : row.insertCell(4).innerHTML = `<span class="badge bg-danger">Expense</span>`;
+            transaction.type === 'income' ? row.insertCell(4).innerHTML = `<span class="badge bg-success">Income</span>` : row.insertCell(4).innerHTML = `<span class="badge bg-danger">Expense</span>`;
             row.insertCell(5).innerHTML=`<button class="btn btn-danger btn-sm" data-id="${transaction.id}" id="deleteTransaction"><i class="fa fa-trash"></i></button>
             <button class="btn btn-warning btn-sm" data-id='${transaction.id}' id="editTransaction"><i class="fa fa-edit"></i></button>`
         });
@@ -137,10 +137,14 @@ function displayTransactionsDataInTable(){
     calculateTotalIncome();
 }
 // pagination
-function renderPagination() {
-    let transactions= JSON.parse(localStorage.getItem(`transactions-${userName}`))||[];
+function totalPagesFunction(){
+     let transactions= JSON.parse(localStorage.getItem(`transactions-${userName}`))||[];
 
     let totalPages = Math.ceil(transactions.length / rowsPerPage)
+    return totalPages
+}
+function renderPagination() {
+    let totalPages  = totalPagesFunction();
     const paginationList = $('#pagination ul');
     paginationList.empty();
 
@@ -167,6 +171,7 @@ function renderPagination() {
 $('.pagination').on('click', '.page-link', function(event) {
     event.preventDefault();
     const clickedText = $(this).text();
+    let totalPages = totalPagesFunction()
 
     if (clickedText === 'Next') {
         if (currentPage < totalPages) {
@@ -228,6 +233,7 @@ $(document).on('click','#editTransaction', function(event){
 
 function editTransaction(id){
     $("#transactionModal").modal('show');
+    $('#validationData').addClass('d-none');
     $("#updateTransaction").removeClass('d-none')
     $("#addTransaction").addClass('d-none')
 
