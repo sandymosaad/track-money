@@ -2,12 +2,13 @@ $(document).ready(function () {
     // get user name
     let userName =JSON.parse(sessionStorage.getItem("User")).userName;
     console.log(userName)
+    let transactions=JSON.parse(localStorage.getItem(`transactions-${userName}`))||[];
     let currentPage = 1
     const rowsPerPage = 5
     let chartInstance = null;
 
     // console.log(currentPage, rowsPerPage, totalPages)
-    displayTransactionsDataInTable();
+    displayTransactionsDataInTable(transactions);
     renderPagination()
     calculateTotalIncomeForThisMonth()
 
@@ -92,7 +93,7 @@ function storeTransaction(kind,description, amount, type, date){
     restForm();
     $('#transactionModal').modal('hide');
     notfication('Transaction added successfully','success');
-    displayTransactionsDataInTable();
+    displayTransactionsDataInTable(transactions);
 }
 
 function restForm(){
@@ -103,8 +104,8 @@ function restForm(){
 }
 
 
-function displayTransactionsDataInTable(){
-    let transactions= JSON.parse(localStorage.getItem(`transactions-${userName}`))||[];
+function displayTransactionsDataInTable(transactions){
+    //let transactions= JSON.parse(localStorage.getItem(`transactions-${userName}`))||[];
     //console.log(transactions);
     if (transactions.length>0){
         $("#transactionTable").removeClass('d-none')
@@ -184,7 +185,7 @@ $('.pagination').on('click', '.page-link', function(event) {
         currentPage = Number(clickedText);
     }
 
-    displayTransactionsDataInTable();
+    displayTransactionsDataInTable(transactions);
     renderPagination();
 });
 
@@ -218,7 +219,7 @@ function deleteTransaction(id){
     transactions= transactions.filter(transaction=> transaction.id!= id);
 
     localStorage.setItem(`transactions-${userName}`,JSON.stringify(transactions));
-    displayTransactionsDataInTable();
+    displayTransactionsDataInTable(transactions);
     notfication('Transaction deleted successfully!', 'danger')
     renderPagination()
 }
@@ -266,7 +267,7 @@ $('#updateTransaction').on('click', function(){
     transactions= transactions.filter(transaction=> transaction.id != id);
     transactions.push(transaction);
     localStorage.setItem(`transactions-${userName}`,JSON.stringify(transactions));
-    displayTransactionsDataInTable();
+    displayTransactionsDataInTable(transactions);
     notfication('Transaction updated successfully!','succss')
 })
 
@@ -326,6 +327,24 @@ function drowChart(totalIncome,totalExpense,balance){
 
 }
 
+// filter
+$('#filterTransaction').on('click' , function(event){
+    event.preventDefault();
+    let dayFilter = $('#dateFilterByDay').val();
+    let monthFilter = $('#dateFilterByMonth').val();
+    monthFilter=new Date(monthFilter).toLocaleDateString('en-US', {month:'long'});
+
+    let transactions= JSON.parse(localStorage.getItem(`transactions-${userName}`));
+    let filterTransactions= [];
+
+    transactions.forEach( transaction=>{
+        if (dayFilter === transaction.date || monthFilter === transaction.monthName){
+            filterTransactions.push (transaction)
+        } 
+    })
+    console.log(filterTransactions)
+    displayTransactionsDataInTable(filterTransactions)
+})
 
 
 
