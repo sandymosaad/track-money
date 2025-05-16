@@ -65,6 +65,7 @@ function validtion(kind,description,amount,date,type){
                 $('#amountError').addClass('d-none');
             }
             if (transactionDate.getTime() > today.getTime()){
+            $('#validationData').removeClass('d-none');
             $('#dateError').removeClass('d-none');
             }else{
                 $('#dateError').addClass('d-none');
@@ -145,7 +146,7 @@ function totalPagesFunction(transactions){
     let totalPages = Math.ceil(transactions.length / rowsPerPage)
     return totalPages
 }
-function renderPagination(transaction) {
+function renderPagination(transactions) {
       if(filterTransactions.length>0){
         totalPages = totalPagesFunction(filterTransactions);
         //console.log(filterTransactions)
@@ -244,8 +245,8 @@ function deleteTransaction(id){
 
     localStorage.setItem(`transactions-${userName}`,JSON.stringify(transactions));
     displayTransactionsDataInTable(transactions);
-    notfication('Transaction deleted successfully!', 'danger')
-    renderPagination()
+    notfication('Transaction deleted successfully!', 'danger');
+    renderPagination(transactions);
 }
 
 // edit transaction
