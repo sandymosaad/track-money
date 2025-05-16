@@ -6,10 +6,11 @@ $(document).ready(function () {
     let currentPage = 1
     const rowsPerPage = 5
     let chartInstance = null;
+    let filterTransactions= [];
 
     // console.log(currentPage, rowsPerPage, totalPages)
     displayTransactionsDataInTable(transactions);
-    renderPagination()
+    renderPagination(transactions)
     calculateTotalIncomeForThisMonth()
 
 
@@ -134,18 +135,25 @@ function displayTransactionsDataInTable(transactions){
             $('#noDataInTable').removeClass('d-none')
             $('#noDataInTable').text('Do not have any transaction yet !');
         }
-    renderPagination();
+    renderPagination(transactions);
     calculateTotalIncomeForThisMonth();
 }
 // pagination
-function totalPagesFunction(){
-     let transactions= JSON.parse(localStorage.getItem(`transactions-${userName}`))||[];
-
+function totalPagesFunction(transactions){
+     //let transactions= JSON.parse(localStorage.getItem(`transactions-${userName}`))||[];
+    //console.log(x)
     let totalPages = Math.ceil(transactions.length / rowsPerPage)
     return totalPages
 }
-function renderPagination() {
-    let totalPages  = totalPagesFunction();
+function renderPagination(transaction) {
+      if(filterTransactions.length>0){
+        totalPages = totalPagesFunction(filterTransactions);
+        //console.log(filterTransactions)
+    }else{
+        totalPages = totalPagesFunction(transactions)
+        //console.log(transactions)
+    }
+    //let totalPages  = totalPagesFunction(transaction);
     const paginationList = $('#pagination ul');
     paginationList.empty();
     paginationList.append(`
@@ -171,7 +179,14 @@ function renderPagination() {
 $('.pagination').on('click', '.page-link', function(event) {
     event.preventDefault();
     const clickedText = $(this).text();
-    let totalPages = totalPagesFunction()
+    let totalPages;
+    if(filterTransactions.length>0){
+        totalPages = totalPagesFunction(filterTransactions);
+        //console.log(filterTransactions)
+    }else{
+        totalPages = totalPagesFunction(transactions)
+        //console.log(transactions)
+    }
 
     if (clickedText === 'Next') {
         if (currentPage < totalPages) {
@@ -184,9 +199,18 @@ $('.pagination').on('click', '.page-link', function(event) {
     } else {
         currentPage = Number(clickedText);
     }
+    if(filterTransactions.length>0){
+        //totalPages = totalPagesFunction(filterTransactions)
+        displayTransactionsDataInTable(filterTransactions);
+        renderPagination(filterTransactions);
+        //console.log(filterTransactions)
+    }else{
+        displayTransactionsDataInTable(transactions);
+        renderPagination(transactions);
+        //console.log(transactions)
 
-    displayTransactionsDataInTable(transactions);
-    renderPagination();
+    }
+  
 });
 
 // notficaton
@@ -330,22 +354,31 @@ function drowChart(totalIncome,totalExpense,balance){
 // filter
 $('#filterTransaction').on('click' , function(event){
     event.preventDefault();
+    filterTransactions=[];
     let dayFilter = $('#dateFilterByDay').val();
     let monthFilter = $('#dateFilterByMonth').val();
     monthFilter=new Date(monthFilter).toLocaleDateString('en-US', {month:'long'});
 
     let transactions= JSON.parse(localStorage.getItem(`transactions-${userName}`));
-    let filterTransactions= [];
-
     transactions.forEach( transaction=>{
         if (dayFilter === transaction.date || monthFilter === transaction.monthName){
             filterTransactions.push (transaction)
         } 
-    })
-    console.log(filterTransactions)
-    displayTransactionsDataInTable(filterTransactions)
+    });
+    //console.log(filterTransactions);
+    displayTransactionsDataInTable(filterTransactions);
+    renderPagination(filterTransactions);
+    $("#filterModal").modal('hide');
 })
-
+$('#clearFiltertion').on('click' , function(){
+    $('#dateFilterByDay').val('');
+    $('#dateFilterByMonth').val('');
+    filterTransactions= [];
+    displayTransactionsDataInTable(transactions);
+    renderPagination(transactions);
+    $("#filterModal").modal('hide');
+        
+})
 
 
 });

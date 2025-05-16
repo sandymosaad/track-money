@@ -75,7 +75,7 @@
         </section>
 
         <section>
-            <div class="text-center d-flex justify-content-between m-3">
+            <div class="text-center d-flex justify-content-between">
                 <h2> All Transactions </h2>
                 <button type="button" class="btn btn-warning text-center" id="openModelToAddTransaction" data-bs-toggle="modal" data-bs-target="#transactionModal">
                     Add Transaction 
@@ -84,28 +84,29 @@
                     Filter Transaction 
                 </button>
                 <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="filterModalLabel">Filter Transaction</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form>
-                            <div class="mb-3">
-                                <label for="dateFilterByDay" class="form-label">Filter By Day</label>
-                                <input type="date" class="form-control" id="dateFilterByDay">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="filterModalLabel">Filter Transaction</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <div class="mb-3">
-                                <label for="dateFilterByMonth" class="form-label">Filter By Month</label>
-                                <input type="month" class="form-control" id="dateFilterByMonth">
+                            <div class="modal-body">
+                                <form>
+                                <div class="mb-3">
+                                    <label for="dateFilterByDay" class="form-label">Filter By Day</label>
+                                    <input type="date" class="form-control" id="dateFilterByDay">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="dateFilterByMonth" class="form-label">Filter By Month</label>
+                                    <input type="month" class="form-control" id="dateFilterByMonth">
+                                </div>
+                                <button  type="button" class="btn btn-warning" id="clearFiltertion">Clear Filtertion</button>
+                                <button  type="submit" class="btn btn-warning" id="filterTransaction">Filter</button>
+                                </form>
                             </div>
-                            <button  type="submit" class="btn btn-warning" id="filterTransaction">Filter</button>
-                            </form>
-                        </div>
 
+                        </div>
                     </div>
-                </div>
                 </div>
             </div>
 
