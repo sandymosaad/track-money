@@ -44,15 +44,32 @@ monthTransactions.forEach(transaction=>{
                 expenseCategory[catCategory]= transaction.amount
             }
         }
-       // console.log(expenseCategory)
+       console.log(expenseCategory)
     };
-
-    
-
 });
 
 
+Object.keys(expenseCategory).forEach(key=>{
+    let itemIcon;
+    let itemPercentage =expenseCategory[key] /monthExpense *100 ;
+    categorys.forEach(ObjCategory=>{
+        if(ObjCategory.category===key){
+        itemIcon = ObjCategory.icon
+        }
+    })
+    $('#categoryExpense').append(
+        ` <div id="categoryItem" class='d-flex align-items-center mt-3'>
+            <i class="me-2 text-warning ${itemIcon} "></i><li>${[key]} = LE.${expenseCategory[key]}</li>
+        </div>
+         <div class="progress">
+            <div id="itemProgress" class="progress-bar progress-bar bg-warning" role="progressbar" style="width: ${itemPercentage.toFixed(0)}%;"  aria-valuenow="${itemPercentage.toFixed(0)}%" aria-valuemin="0" aria-valuemax="100">
+            ${itemPercentage.toFixed(0)}%
+            </div>
+        </div>
+`
+    )
 
+})
 
 // console.log (monthTransactions)
 // console.log (transactions)
