@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/reportStyle.css">
+    <link rel="stylesheet" href="css/dashboardStyle.css ">
+</head>
+<body>
+    <header class="d-flex justify-content-evenly align-items-center px-3 py-2 shadow">
+      <div class="d-flex align-items-center logo">
+          <img src="assets/images/LOGO.png" alt="logo" >
+          <h5>Track Money</h5>
+      </div>
+      <nav class="navbar navbar-expand-lg">
+          <ul class="d-flex me-3" >
+              <li><a href="dashboard.html">Dashboard</a></li>
+              <li><a href="transactions.html">Transactions</a></li>
+              <li><a href="budget.html">Budget</a></li>
+              <li><a href="reports.html">Reports</a></li>
+              <li><a href="settings.html">Settings</a></li>
+          </ul>
+      </nav>
+      <div>
+          <button class="btn btn-danger">Logout</button>
+      </div>
+    </header>
+
+    <h2 class="text-center my-4">Financial Reports</h2>
+    <div class="d-flex justify-content-center gap-3 mb-4">
+      <!-- <select id="filterYear" class="form-select w-auto">
+      </select> -->
+              <input type="date">
+
+      <!-- <select id="filterMonth" class="form-select w-auto">
+      </select> -->
+              <input type="month">
+
+      <button class="btn btn-warning">Generate</button>
+    </div>
+    <main class="container d-flex justify-content-evenly">
+          <section id="expense">
+            <canvas id="expenseChart"></canvas>
+            <div>
+              <h3> Category Expense</h3>
+              
+            </div>
+          </section>
+          <section id="income">
+            <canvas id="incomeChart"></canvas>
+              <h3> Category Income</h3>
+
+          </section>
+          <section id="statistics">
+            <h3> Balance</h3>
+          </section>
+    </main>
+
+
+
+
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="js/report.js"></script>
+</body>
+</html>
