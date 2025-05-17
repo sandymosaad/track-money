@@ -320,7 +320,7 @@ function calculateTotalIncomeForThisMonth(){
     drowChart(totalIncome , totalExpense, balance)
 }
 
-// cart section
+// chart section
 function drowChart(totalIncome,totalExpense,balance){
     if(totalIncome >0 || totalExpense>0){
         $('#balanceChartPargrph').addClass('d-none')

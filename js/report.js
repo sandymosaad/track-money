@@ -16,7 +16,8 @@ let categorys =[
                     {kind:"personal",icon:"fa-solid fa-spa" ,category:" Personal Care"},
                     {kind:"savings",icon:"fa-solid fa-piggy-bank" ,category: "Savings"}
 ]
-localStorage.setItem('Categorys', JSON.stringify(categorys))
+localStorage.setItem('Categorys', JSON.stringify(categorys));
+
 let userName = JSON.parse(sessionStorage.getItem('User')).userName;
 let monthName = new Date().toLocaleDateString('en-US', {month:'long'});
 let year = new Date().getFullYear();
@@ -24,6 +25,7 @@ let transactions = JSON.parse(localStorage.getItem(`transactions-${userName}`));
 let monthTransactions=[];
 let monthExpense =0;
 let expenseCategory={};
+let chartInstance= null;
 transactions.forEach(transaction => {
     if(monthName===transaction.monthName && year===transaction.year){
         monthTransactions.push(transaction)
@@ -44,12 +46,15 @@ monthTransactions.forEach(transaction=>{
                 expenseCategory[catCategory]= transaction.amount
             }
         }
-       console.log(expenseCategory)
+        console.log(expenseCategory)
     };
 });
 
-
+let expenseCategoryLables =[];
+let expenseCategoryData = [];
 Object.keys(expenseCategory).forEach(key=>{
+    expenseCategoryLables.push(key);
+    expenseCategoryData.push(expenseCategory[key])
     let itemIcon;
     let itemPercentage =expenseCategory[key] /monthExpense *100 ;
     categorys.forEach(ObjCategory=>{
@@ -68,9 +73,36 @@ Object.keys(expenseCategory).forEach(key=>{
         </div>
 `
     )
-
+//console.log(expenseCategoryData , expenseCategoryLables)
 })
 
 // console.log (monthTransactions)
 // console.log (transactions)
 // console.log (monthExpense)
+
+
+// chart expense
+function generateRandomColor() {
+        return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+}
+let backgroundColors = expenseCategoryLables.map(() => generateRandomColor());
+
+let ctxExpense = document.getElementById("expenseChart").getContext("2d");
+if (chartInstance !== null) {
+        chartInstance.destroy();
+    }
+chartInstance =new Chart(ctxExpense, {
+    type: "pie",
+    data: {
+        labels: expenseCategoryLables,
+        datasets: [{
+            //label: `Balance is EL.${ balance}`,
+            data:  expenseCategoryData, 
+            backgroundColor:backgroundColors, 
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+    }
+});
