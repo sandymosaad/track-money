@@ -29,23 +29,30 @@ let monthIncome =0;
 
 let incomeCategory={};
 let expenseCategory={};
+
+let expenseCategoryLables =[];
+let expenseCategoryData = [];
+let incomeCategoryLables =[];
+let incomeCategoryData = [];
+
+// get month transactions and month income and expense and object of categorys
 transactions.forEach(transaction => {
     if(monthName===transaction.monthName && year===transaction.year){
         monthTransactions.push(transaction)
     }
 });
-
 monthTransactions.forEach(transaction=>{
     if(transaction.type==='expense'){
         monthExpense+= transaction.amount;
-        sepirtDataOfCategory(expenseCategory,transaction)
+        getObjectOfCategoryDepandOnTypeOfTransaction(expenseCategory,transaction)
     }else if (transaction.type==='income'){
         monthIncome+= transaction.amount;
-        sepirtDataOfCategory(incomeCategory,transaction)
+        getObjectOfCategoryDepandOnTypeOfTransaction(incomeCategory,transaction)
     }
 });
 
-function sepirtDataOfCategory(ObjectOfIncomeOrExpense,transaction){
+// 
+function getObjectOfCategoryDepandOnTypeOfTransaction(ObjectOfIncomeOrExpense,transaction){
     let categoryObj = categorys.find(cat => cat.kind === transaction.kind);
         if (categoryObj){
             let catCategory = categoryObj.category;
@@ -57,11 +64,6 @@ function sepirtDataOfCategory(ObjectOfIncomeOrExpense,transaction){
         }
         console.log(ObjectOfIncomeOrExpense)
 }
-
-let expenseCategoryLables =[];
-let expenseCategoryData = [];
-let incomeCategoryLables =[];
-let incomeCategoryData = [];
 
 function drawCategoryItemsWithProgressBar(ObjectOfIncomeOrExpense, chartCategoryLables,chartCategoryData,monthExpenseOrIncome,categoryId){
     Object.keys(ObjectOfIncomeOrExpense).forEach(key=>{
@@ -87,7 +89,6 @@ function drawCategoryItemsWithProgressBar(ObjectOfIncomeOrExpense, chartCategory
         )
     })
 }
-
 
 
 // --------------------------------- charts --------------------------
@@ -125,3 +126,30 @@ if(monthIncome>0){
     drawCategoryItemsWithProgressBar(incomeCategory,incomeCategoryLables,incomeCategoryData,monthIncome, 'categoryIncome');
     drawChart(ctxIncome,incomeCategoryLables,incomeCategoryData);
 }
+
+//-------------------------
+let tbody = document.getElementById('tbody');
+//tbody.empty();
+monthTransactions.forEach(transaction=>{
+    let totalTransactionIncome=0;
+    let totalTransactionExpense=0;
+    let balanseTransaction = totalTransactionIncome - totalTransactionExpense;
+    monthTransactions.forEach(tran=>{
+        if (tran.date === transaction.date){
+            if (transaction.type ==='income'){
+                totalTransactionIncome+=transaction.amount;
+            }else{
+                totalTransactionExpense+=transaction.amount;
+            }
+        } 
+    })
+
+let row = tbody.insertRow();
+row.insertCell(0).textContent= transaction.date;
+row.insertCell(1).textContent= totalTransactionExpense;
+row.insertCell(2).textContent= totalTransactionIncome;
+row.insertCell(3).textContent= balanseTransaction;
+
+}
+
+)

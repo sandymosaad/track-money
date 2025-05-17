@@ -41,7 +41,7 @@
 
       <button class="btn btn-warning">Generate</button>
     </div>
-    <main class="container d-flex justify-content-evenly">
+    <main class="container d-flex justify-content-between">
           <section id="expense">
             <div>
             <canvas id="expenseChart"></canvas>
@@ -64,7 +64,24 @@
             </div>
           </section>
           <section id="statistics">
-            <h3> Balance</h3>
+            <div>
+              <canvas id="balanceChart"></canvas>
+            </div>
+            <div>
+              <h3> Balance</h3>
+              <table class="table table-striped" id="balanceTable">
+                <thead>
+                  <tr> 
+                    <th scope="col">Day</th>
+                    <th scope="col">Expense</th>
+                    <th scope="col">Income</th>
+                    <th scope="col">Balance</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody">
+                </tbody>
+                </table>
+            </div>
           </section>
     </main>
 
