@@ -23,7 +23,11 @@ let monthName = new Date().toLocaleDateString('en-US', {month:'long'});
 let year = new Date().getFullYear();
 let transactions = JSON.parse(localStorage.getItem(`transactions-${userName}`));
 let monthTransactions=[];
+
 let monthExpense =0;
+let monthIncome =0;
+
+let incomeCategory={};
 let expenseCategory={};
 let chartInstance= null;
 transactions.forEach(transaction => {
@@ -35,38 +39,47 @@ transactions.forEach(transaction => {
 monthTransactions.forEach(transaction=>{
     if(transaction.type==='expense'){
         monthExpense+= transaction.amount;
+        sepirtDataOfCategory(expenseCategory,transaction)
+    }else if (transaction.type==='income'){
+        monthIncome+= transaction.amount;
+        sepirtDataOfCategory(incomeCategory,transaction)
+    }
+});
 
-        let categoryObj = categorys.find(cat => cat.kind === transaction.kind);
+function sepirtDataOfCategory(ObjectOfIncomeOrExpense,transaction){
+let categoryObj = categorys.find(cat => cat.kind === transaction.kind);
         if (categoryObj){
             let catCategory = categoryObj.category;
-
-            if(expenseCategory[catCategory]){
-                expenseCategory[catCategory]+=transaction.amount
+            if(ObjectOfIncomeOrExpense[catCategory]){
+                ObjectOfIncomeOrExpense[catCategory]+=transaction.amount
             }else{
-                expenseCategory[catCategory]= transaction.amount
+                ObjectOfIncomeOrExpense[catCategory]= transaction.amount
             }
         }
-        console.log(expenseCategory)
-    };
-});
+        console.log(ObjectOfIncomeOrExpense)
+}
 
 let expenseCategoryLables =[];
 let expenseCategoryData = [];
-Object.keys(expenseCategory).forEach(key=>{
-    expenseCategoryLables.push(key);
-    expenseCategoryData.push(expenseCategory[key])
+let incomeCategoryLables =[];
+let incomeCategoryData = [];
+
+function drawCategoryItemsWithProgressBar(ObjectOfIncomeOrExpense, chartCategoryLables,chartCategoryData,monthExpenseOrIncome,categoryId){
+Object.keys(ObjectOfIncomeOrExpense).forEach(key=>{
+    chartCategoryLables.push(key);
+    chartCategoryData.push(ObjectOfIncomeOrExpense[key])
     let itemIcon;
-    let itemPercentage =expenseCategory[key] /monthExpense *100 ;
+    let itemPercentage =ObjectOfIncomeOrExpense[key] /monthExpenseOrIncome *100 ;
     categorys.forEach(ObjCategory=>{
         if(ObjCategory.category===key){
         itemIcon = ObjCategory.icon
         }
     })
-    $('#categoryExpense').append(
-        ` <div id="categoryItem" class='d-flex align-items-center mt-3'>
-            <i class="me-2 text-warning ${itemIcon} "></i><li>${[key]} = LE.${expenseCategory[key]}</li>
+    $(`#${categoryId}`).append(
+        `<div id="categoryItem" class='d-flex align-items-center mt-3'>
+            <i class="me-2 text-warning ${itemIcon} "></i><li>${[key]} = LE.${ObjectOfIncomeOrExpense[key]}</li>
         </div>
-         <div class="progress">
+         <div class="progress mb-3">
             <div id="itemProgress" class="progress-bar progress-bar bg-warning" role="progressbar" style="width: ${itemPercentage.toFixed(0)}%;"  aria-valuenow="${itemPercentage.toFixed(0)}%" aria-valuemin="0" aria-valuemax="100">
             ${itemPercentage.toFixed(0)}%
             </div>
@@ -75,6 +88,38 @@ Object.keys(expenseCategory).forEach(key=>{
     )
 //console.log(expenseCategoryData , expenseCategoryLables)
 })
+}
+
+if(monthExpense>0){
+    drawCategoryItemsWithProgressBar(expenseCategory,expenseCategoryLables,expenseCategoryData,monthExpense ,'categoryExpense')
+}
+if(monthIncome>0){
+    drawCategoryItemsWithProgressBar(incomeCategory,incomeCategoryLables,incomeCategoryData,monthIncome, 'categoryIncome')
+}
+// Object.keys(expenseCategory).forEach(key=>{
+//     expenseCategoryLables.push(key);
+//     expenseCategoryData.push(expenseCategory[key])
+//     let itemIcon;
+//     let itemPercentage =expenseCategory[key] /monthExpense *100 ;
+//     categorys.forEach(ObjCategory=>{
+//         if(ObjCategory.category===key){
+//         itemIcon = ObjCategory.icon
+//         }
+//     })
+//     $('#categoryExpense').append(
+//         `<div id="categoryItem" class='d-flex align-items-center mt-3'>
+//             <i class="me-2 text-warning ${itemIcon} "></i><li>${[key]} = LE.${expenseCategory[key]}</li>
+//         </div>
+//          <div class="progress mb-3">
+//             <div id="itemProgress" class="progress-bar progress-bar bg-warning" role="progressbar" style="width: ${itemPercentage.toFixed(0)}%;"  aria-valuenow="${itemPercentage.toFixed(0)}%" aria-valuemin="0" aria-valuemax="100">
+//             ${itemPercentage.toFixed(0)}%
+//             </div>
+//         </div>
+// `
+//     )
+// //console.log(expenseCategoryData , expenseCategoryLables)
+// })
+
 
 // console.log (monthTransactions)
 // console.log (transactions)
