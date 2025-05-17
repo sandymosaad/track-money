@@ -86,7 +86,6 @@ Object.keys(ObjectOfIncomeOrExpense).forEach(key=>{
         </div>
 `
     )
-//console.log(expenseCategoryData , expenseCategoryLables)
 })
 }
 
@@ -96,37 +95,8 @@ if(monthExpense>0){
 if(monthIncome>0){
     drawCategoryItemsWithProgressBar(incomeCategory,incomeCategoryLables,incomeCategoryData,monthIncome, 'categoryIncome')
 }
-// Object.keys(expenseCategory).forEach(key=>{
-//     expenseCategoryLables.push(key);
-//     expenseCategoryData.push(expenseCategory[key])
-//     let itemIcon;
-//     let itemPercentage =expenseCategory[key] /monthExpense *100 ;
-//     categorys.forEach(ObjCategory=>{
-//         if(ObjCategory.category===key){
-//         itemIcon = ObjCategory.icon
-//         }
-//     })
-//     $('#categoryExpense').append(
-//         `<div id="categoryItem" class='d-flex align-items-center mt-3'>
-//             <i class="me-2 text-warning ${itemIcon} "></i><li>${[key]} = LE.${expenseCategory[key]}</li>
-//         </div>
-//          <div class="progress mb-3">
-//             <div id="itemProgress" class="progress-bar progress-bar bg-warning" role="progressbar" style="width: ${itemPercentage.toFixed(0)}%;"  aria-valuenow="${itemPercentage.toFixed(0)}%" aria-valuemin="0" aria-valuemax="100">
-//             ${itemPercentage.toFixed(0)}%
-//             </div>
-//         </div>
-// `
-//     )
-// //console.log(expenseCategoryData , expenseCategoryLables)
-// })
 
-
-// console.log (monthTransactions)
-// console.log (transactions)
-// console.log (monthExpense)
-
-
-// chart expense
+// --------------------------------- charts --------------------------
 function generateRandomColor() {
         return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 }
@@ -151,3 +121,20 @@ chartInstance =new Chart(ctxExpense, {
         maintainAspectRatio: false,
     }
 });
+
+let ctxIncome = document.getElementById('incomeChart').getContext('2d');
+new Chart( ctxIncome,{
+    type: "pie",
+    data:{
+        labels: incomeCategoryLables,
+        datasets: [{
+            data: incomeCategoryData,
+            backgroundColor:backgroundColors,
+        }]
+    },
+    options:{
+        responsive :true,
+        maintainAspectRatio: false,
+
+    }
+})
