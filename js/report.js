@@ -29,7 +29,6 @@ let monthIncome =0;
 
 let incomeCategory={};
 let expenseCategory={};
-let chartInstance= null;
 transactions.forEach(transaction => {
     if(monthName===transaction.monthName && year===transaction.year){
         monthTransactions.push(transaction)
@@ -47,7 +46,7 @@ monthTransactions.forEach(transaction=>{
 });
 
 function sepirtDataOfCategory(ObjectOfIncomeOrExpense,transaction){
-let categoryObj = categorys.find(cat => cat.kind === transaction.kind);
+    let categoryObj = categorys.find(cat => cat.kind === transaction.kind);
         if (categoryObj){
             let catCategory = categoryObj.category;
             if(ObjectOfIncomeOrExpense[catCategory]){
@@ -65,76 +64,64 @@ let incomeCategoryLables =[];
 let incomeCategoryData = [];
 
 function drawCategoryItemsWithProgressBar(ObjectOfIncomeOrExpense, chartCategoryLables,chartCategoryData,monthExpenseOrIncome,categoryId){
-Object.keys(ObjectOfIncomeOrExpense).forEach(key=>{
-    chartCategoryLables.push(key);
-    chartCategoryData.push(ObjectOfIncomeOrExpense[key])
-    let itemIcon;
-    let itemPercentage =ObjectOfIncomeOrExpense[key] /monthExpenseOrIncome *100 ;
-    categorys.forEach(ObjCategory=>{
-        if(ObjCategory.category===key){
-        itemIcon = ObjCategory.icon
-        }
-    })
-    $(`#${categoryId}`).append(
-        `<div id="categoryItem" class='d-flex align-items-center mt-3'>
-            <i class="me-2 text-warning ${itemIcon} "></i><li>${[key]} = LE.${ObjectOfIncomeOrExpense[key]}</li>
-        </div>
-         <div class="progress mb-3">
-            <div id="itemProgress" class="progress-bar progress-bar bg-warning" role="progressbar" style="width: ${itemPercentage.toFixed(0)}%;"  aria-valuenow="${itemPercentage.toFixed(0)}%" aria-valuemin="0" aria-valuemax="100">
-            ${itemPercentage.toFixed(0)}%
+    Object.keys(ObjectOfIncomeOrExpense).forEach(key=>{
+        chartCategoryLables.push(key);
+        chartCategoryData.push(ObjectOfIncomeOrExpense[key])
+        let itemIcon;
+        let itemPercentage =ObjectOfIncomeOrExpense[key] /monthExpenseOrIncome *100 ;
+        categorys.forEach(ObjCategory=>{
+            if(ObjCategory.category===key){
+            itemIcon = ObjCategory.icon
+            }
+        })
+        $(`#${categoryId}`).append(
+            `<div id="categoryItem" class='d-flex align-items-center mt-3'>
+                <i class="me-2 text-warning ${itemIcon} "></i><li>${[key]} = LE.${ObjectOfIncomeOrExpense[key]}</li>
             </div>
-        </div>
-`
-    )
-})
+            <div class="progress mb-3">
+                <div id="itemProgress" class="progress-bar progress-bar bg-warning" role="progressbar" style="width: ${itemPercentage.toFixed(0)}%;"  aria-valuenow="${itemPercentage.toFixed(0)}%" aria-valuemin="0" aria-valuemax="100">
+                ${itemPercentage.toFixed(0)}%
+                </div>
+            </div>
+    `
+        )
+    })
 }
 
-if(monthExpense>0){
-    drawCategoryItemsWithProgressBar(expenseCategory,expenseCategoryLables,expenseCategoryData,monthExpense ,'categoryExpense')
-}
-if(monthIncome>0){
-    drawCategoryItemsWithProgressBar(incomeCategory,incomeCategoryLables,incomeCategoryData,monthIncome, 'categoryIncome')
-}
+
 
 // --------------------------------- charts --------------------------
 function generateRandomColor() {
         return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 }
-let backgroundColors = expenseCategoryLables.map(() => generateRandomColor());
 
 let ctxExpense = document.getElementById("expenseChart").getContext("2d");
-if (chartInstance !== null) {
-        chartInstance.destroy();
-    }
-chartInstance =new Chart(ctxExpense, {
-    type: "pie",
-    data: {
-        labels: expenseCategoryLables,
-        datasets: [{
-            //label: `Balance is EL.${ balance}`,
-            data:  expenseCategoryData, 
-            backgroundColor:backgroundColors, 
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-    }
-});
-
 let ctxIncome = document.getElementById('incomeChart').getContext('2d');
-new Chart( ctxIncome,{
-    type: "pie",
-    data:{
-        labels: incomeCategoryLables,
-        datasets: [{
-            data: incomeCategoryData,
-            backgroundColor:backgroundColors,
-        }]
-    },
-    options:{
-        responsive :true,
-        maintainAspectRatio: false,
 
-    }
-})
+function drawChart(chartId,labels,data){
+    let backgroundColors = expenseCategoryLables.map(() => generateRandomColor());
+    new Chart( chartId,{
+        type: "pie",
+        data:{
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor:backgroundColors,
+            }]
+        },
+        options:{
+            responsive :true,
+            maintainAspectRatio: false,
+
+        }
+    })
+}
+
+if(monthExpense>0){
+    drawCategoryItemsWithProgressBar(expenseCategory,expenseCategoryLables,expenseCategoryData,monthExpense ,'categoryExpense');
+    drawChart(ctxExpense,expenseCategoryLables,expenseCategoryData);
+}
+if(monthIncome>0){
+    drawCategoryItemsWithProgressBar(incomeCategory,incomeCategoryLables,incomeCategoryData,monthIncome, 'categoryIncome');
+    drawChart(ctxIncome,incomeCategoryLables,incomeCategoryData);
+}
