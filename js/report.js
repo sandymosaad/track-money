@@ -128,28 +128,41 @@ if(monthIncome>0){
 }
 
 //-------------------------
+
+const transactionsByDate = {};
+monthTransactions.forEach(transaction => {
+    const { date, amount, type } = transaction;
+
+    if (!transactionsByDate[date]) {
+        transactionsByDate[date] = { totalTransactionIncome: 0, totalTransactionExpense: 0 };
+    }
+
+    if (type === 'income') {
+        transactionsByDate[date].totalTransactionIncome += amount;
+    } else {
+        transactionsByDate[date].totalTransactionExpense += amount;
+    }
+});
+console.log(transactionsByDate)
+
+const transactionsLOOP = Object.entries(transactionsByDate).map(([tranDate, { totalTransactionIncome, totalTransactionExpense }]) => {
+    const balanseTransaction = totalTransactionIncome - totalTransactionExpense;
+    return { tranDate, totalTransactionExpense, totalTransactionIncome, balanseTransaction };
+});
+
+console.log(transactionsLOOP);
 let tbody = document.getElementById('tbody');
-//tbody.empty();
-monthTransactions.forEach(transaction=>{
-    let totalTransactionIncome=0;
-    let totalTransactionExpense=0;
-    let balanseTransaction = totalTransactionIncome - totalTransactionExpense;
-    monthTransactions.forEach(tran=>{
-        if (tran.date === transaction.date){
-            if (transaction.type ==='income'){
-                totalTransactionIncome+=transaction.amount;
-            }else{
-                totalTransactionExpense+=transaction.amount;
-            }
-        } 
-    })
-
 let row = tbody.insertRow();
-row.insertCell(0).textContent= transaction.date;
-row.insertCell(1).textContent= totalTransactionExpense;
-row.insertCell(2).textContent= totalTransactionIncome;
-row.insertCell(3).textContent= balanseTransaction;
+row.insertCell(0).textContent= monthName;
+row.insertCell(1).textContent= - monthExpense;
+row.insertCell(2).textContent= `+ ${monthIncome}`;
+row.insertCell(3).textContent= monthIncome -monthExpense;
 
-}
 
-)
+transactionsLOOP.forEach(transaction=>{
+let row = tbody.insertRow();
+row.insertCell(0).textContent= transaction.tranDate;
+row.insertCell(1).textContent= - transaction.totalTransactionExpense;
+row.insertCell(2).textContent= (transaction.totalTransactionIncome>0)? `+ ${transaction.totalTransactionIncome}` :transaction.totalTransactionIncome ;
+row.insertCell(3).textContent= transaction.balanseTransaction;
+})
