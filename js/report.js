@@ -92,9 +92,7 @@ function drawCategoryItemsWithProgressBar(ObjectOfIncomeOrExpense, chartCategory
 
 
 // --------------------------------- charts --------------------------
-// function generateRandomColor() {
-//         return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-// }
+
 function generateRandomColor() {
     const red = 255; 
     const green = Math.floor(150 + Math.random() * 55);
@@ -175,3 +173,47 @@ row.insertCell(1).textContent= - transaction.totalTransactionExpense;
 row.insertCell(2).textContent= (transaction.totalTransactionIncome>0)? `+ ${transaction.totalTransactionIncome}` :transaction.totalTransactionIncome ;
 row.insertCell(3).textContent= transaction.balanseTransaction;
 })
+
+// chart for statistics
+const labels = transactionsLOOP.map(t => t.tranDate);
+const incomeData = transactionsLOOP.map(t => t.totalTransactionIncome);
+const expenseData = transactionsLOOP.map(t => t.totalTransactionExpense);
+
+const ctxBlanace = document.getElementById('dailyChart').getContext('2d');
+
+new Chart(ctxBlanace, {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [
+            {
+                label: 'Income',
+                data: incomeData,
+                backgroundColor: 'rgba(25, 135, 84, 1)',
+                //borderColor: 'rgba(25, 135, 84, 1)',
+                borderWidth: 1
+            },
+            {
+                label: 'Expense',
+                data: expenseData,
+                backgroundColor: 'rgba(220, 53, 69, 1)',
+                // borderColor: 'rgba(220, 53, 69, 1)',
+                borderWidth: 1
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        },
+        plugins: {
+            title: {
+                display: true,
+                text: 'Daily Income vs Expense'
+            }
+        }
+    }
+});

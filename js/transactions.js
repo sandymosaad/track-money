@@ -336,7 +336,7 @@ function drowChart(totalIncome,totalExpense,balance){
                     datasets: [{
                         //label: `Balance is EL.${ balance}`,
                         data: [totalIncome || 0,totalExpense ||0], 
-                        backgroundColor:[ '#55f091','rgb(240, 102, 102)'], 
+                        backgroundColor:[ 'rgba(25, 135, 84, 0.7)','rgba(220, 53, 69, 1)'], 
                     }]
                 },
                 options: {
