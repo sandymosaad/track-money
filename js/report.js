@@ -92,9 +92,16 @@ function drawCategoryItemsWithProgressBar(ObjectOfIncomeOrExpense, chartCategory
 
 
 // --------------------------------- charts --------------------------
+// function generateRandomColor() {
+//         return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+// }
 function generateRandomColor() {
-        return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+    const red = 255; 
+    const green = Math.floor(150 + Math.random() * 55);
+    const blue = Math.floor(Math.random() * 200); 
+    return `rgb(${red}, ${green}, ${blue})`;
 }
+
 
 let ctxExpense = document.getElementById("expenseChart").getContext("2d");
 let ctxIncome = document.getElementById('incomeChart').getContext('2d');
@@ -129,6 +136,8 @@ if(monthIncome>0){
 
 //-------------------------
 
+
+// table
 const transactionsByDate = {};
 monthTransactions.forEach(transaction => {
     const { date, amount, type } = transaction;
