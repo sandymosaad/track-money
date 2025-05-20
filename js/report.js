@@ -81,20 +81,39 @@ $('#btnSubmit').on('click', function(event){
     monthName =monthNameInput;
     ///year = yearInput
         console.log( monthName)
-        getTransactionsMonth(monthName, year)
+        if (monthInput){
+            getTransactionsMonth(monthName, year)
+        }
+        if(yearInput){
+            getTransactionsMonth(0,yearInput)
+        }
 })
-        console.log( monthName)
+console.log( monthName)
 
 
 
 // get month transactions and month income and expense and object of categorys
 function getTransactionsMonth(monthNameArr,yearArr){
-    monthTransactions=[];
-transactions.forEach(transaction => {
-    if(monthNameArr===transaction.monthName && yearArr===transaction.year){
-        monthTransactions.push(transaction)
-    }
-});
+monthTransactions=[];
+console.log(monthNameArr, yearArr)
+if (monthNameArr){
+    transactions.forEach(transaction => {
+        if(monthNameArr===transaction.monthName && yearArr===transaction.year){
+            monthTransactions.push(transaction)
+        }
+    });
+    console.log( monthTransactions)
+} else if(monthNameArr===0){
+    console.log( transactions)
+    transactions.forEach(transaction => {
+        if( yearArr==transaction.year){
+            monthTransactions.push(transaction)
+        }
+    });
+    console.log( monthTransactions)
+
+}
+
 console.log(monthTransactions)
 getTotalIncomeAndExpense()
 }
@@ -219,46 +238,47 @@ function drowChartAndCategory(){
 
 // table
 function displayDataInTable(){
-const transactionsByDate = {};
-monthTransactions.forEach(transaction => {
-    const { date, amount, type } = transaction;
+    const transactionsByDate = {};
+    let year = monthTransactions[0].year
+    monthTransactions.forEach(transaction => {
+        const { date, amount, type } = transaction;
 
-    if (!transactionsByDate[date]) {
-        transactionsByDate[date] = { totalTransactionIncome: 0, totalTransactionExpense: 0 };
-    }
+        if (!transactionsByDate[date]) {
+            transactionsByDate[date] = { totalTransactionIncome: 0, totalTransactionExpense: 0 };
+        }
 
-    if (type === 'income') {
-        transactionsByDate[date].totalTransactionIncome += amount;
-    } else {
-        transactionsByDate[date].totalTransactionExpense += amount;
-    }
-});
-console.log(transactionsByDate)
+        if (type === 'income') {
+            transactionsByDate[date].totalTransactionIncome += amount;
+        } else {
+            transactionsByDate[date].totalTransactionExpense += amount;
+        }
+    });
+    console.log(transactionsByDate)
 
-const transactionsLOOP = Object.entries(transactionsByDate).map(([tranDate, { totalTransactionIncome, totalTransactionExpense }]) => {
-    const balanseTransaction = totalTransactionIncome - totalTransactionExpense;
-    return { tranDate, totalTransactionExpense, totalTransactionIncome, balanseTransaction };
-});
+    const transactionsLOOP = Object.entries(transactionsByDate).map(([tranDate, { totalTransactionIncome, totalTransactionExpense }]) => {
+        const balanseTransaction = totalTransactionIncome - totalTransactionExpense;
+        return { tranDate, totalTransactionExpense, totalTransactionIncome, balanseTransaction };
+    });
 
-console.log(transactionsLOOP);
-let tbody = document.getElementById('tbody');
-$(tbody).empty()
-let row = tbody.insertRow();
-row.insertCell(0).textContent= monthName;
-row.insertCell(1).textContent= - monthExpense;
-row.insertCell(2).textContent= `+ ${monthIncome}`;
-row.insertCell(3).textContent= monthIncome -monthExpense;
+    console.log(transactionsLOOP);
+    let tbody = document.getElementById('tbody');
+    $(tbody).empty()
+    let row = tbody.insertRow();
+    row.insertCell(0).textContent= (monthName==='Invalid Date')? year: monthName;
+    row.insertCell(1).textContent= - monthExpense;
+    row.insertCell(2).textContent= `+ ${monthIncome}`;
+    row.insertCell(3).textContent= monthIncome -monthExpense;
 
 
-transactionsLOOP.forEach(transaction=>{
-let row = tbody.insertRow();
-row.insertCell(0).textContent= transaction.tranDate;
-row.insertCell(1).textContent= - transaction.totalTransactionExpense;
-row.insertCell(2).textContent= (transaction.totalTransactionIncome>0)? `+ ${transaction.totalTransactionIncome}` :transaction.totalTransactionIncome ;
-row.insertCell(3).textContent= (transaction.balanseTransaction>0)? `+ ${transaction.balanseTransaction}`:transaction.balanseTransaction;
-})
-console.log(transactionsLOOP)
-drawStatisticsChart(transactionsLOOP);
+    transactionsLOOP.forEach(transaction=>{
+    let row = tbody.insertRow();
+    row.insertCell(0).textContent= transaction.tranDate;
+    row.insertCell(1).textContent= - transaction.totalTransactionExpense;
+    row.insertCell(2).textContent= (transaction.totalTransactionIncome>0)? `+ ${transaction.totalTransactionIncome}` :transaction.totalTransactionIncome ;
+    row.insertCell(3).textContent= (transaction.balanseTransaction>0)? `+ ${transaction.balanseTransaction}`:transaction.balanseTransaction;
+    })
+    console.log(transactionsLOOP)
+    drawStatisticsChart(transactionsLOOP);
 }
 
 
