@@ -21,6 +21,8 @@ localStorage.setItem('Categorys', JSON.stringify(categorys));
 let userName = JSON.parse(sessionStorage.getItem('User')).userName;
 let monthName = new Date().toLocaleDateString('en-US', {month:'long'});
 let year = new Date().getFullYear();
+// let monthName;
+// let year;
 let transactions = JSON.parse(localStorage.getItem(`transactions-${userName}`));
 let monthTransactions=[];
 
@@ -34,22 +36,86 @@ let expenseCategoryLables =[];
 let expenseCategoryData = [];
 let incomeCategoryLables =[];
 let incomeCategoryData = [];
+// let chartInstanceExpense = null;
+let chartInstance = null;
+let chartInstanceExpense = { chart: null };
+let chartInstanceIncome = { chart: null };
+
+
+
+let ctxExpense = document.getElementById("expenseChart").getContext("2d");
+let ctxIncome = document.getElementById('incomeChart').getContext('2d');
+getTransactionsMonth(monthName, year)
+function toggleInputs() {
+    const reportType = document.getElementById('reportType').value;
+    const yearInput = document.getElementById('yearInput');
+    const monthInput = document.getElementById('monthInput');
+
+    $('#selection' ).removeClass().addClass('col-md-4');
+    $('#btnSubmit' ).removeClass().addClass('col-md-4');
+    yearInput.classList.add('d-none');
+    monthInput.classList.add('d-none');
+
+    if (reportType === 'year') {
+        yearInput.classList.remove('d-none');
+    } else if (reportType === 'month') {
+        monthInput.classList.remove('d-none');
+    }
+
+}
+// function formatYear() {
+//     const dateInput = document.getElementById('year');
+//     const dateValue = dateInput.value;
+//     // const yearOnly = new Date(dateValue).getFullYear();
+//     //alert('Selected Year: ' + dateValue);
+// }
+$('#btnSubmit').on('click', function(event){
+    event.preventDefault()
+    const yearInput = $('#year').val();
+    const monthInput = ($('#month').val());
+    
+    let fullDate = new Date(monthInput);
+    year = fullDate.getFullYear();
+    let monthNameInput = fullDate.toLocaleDateString('en-US', {month:'long'});
+    console.log(yearInput, monthInput)
+    monthName =monthNameInput;
+    ///year = yearInput
+        console.log( monthName)
+        getTransactionsMonth(monthName, year)
+})
+        console.log( monthName)
+
+
 
 // get month transactions and month income and expense and object of categorys
+function getTransactionsMonth(monthNameArr,yearArr){
+    monthTransactions=[];
 transactions.forEach(transaction => {
-    if(monthName===transaction.monthName && year===transaction.year){
+    if(monthNameArr===transaction.monthName && yearArr===transaction.year){
         monthTransactions.push(transaction)
     }
 });
-monthTransactions.forEach(transaction=>{
-    if(transaction.type==='expense'){
-        monthExpense+= transaction.amount;
-        getObjectOfCategoryDepandOnTypeOfTransaction(expenseCategory,transaction)
-    }else if (transaction.type==='income'){
-        monthIncome+= transaction.amount;
-        getObjectOfCategoryDepandOnTypeOfTransaction(incomeCategory,transaction)
-    }
-});
+console.log(monthTransactions)
+getTotalIncomeAndExpense()
+}
+
+function getTotalIncomeAndExpense(){
+    monthExpense=0;
+    monthIncome=0;
+    expenseCategory={};
+    incomeCategory={};
+    monthTransactions.forEach(transaction=>{
+        if(transaction.type==='expense'){
+            monthExpense+= transaction.amount;
+            getObjectOfCategoryDepandOnTypeOfTransaction(expenseCategory,transaction)
+        }else if (transaction.type==='income'){
+            monthIncome+= transaction.amount;
+            getObjectOfCategoryDepandOnTypeOfTransaction(incomeCategory,transaction)
+        }
+    });
+console.log(monthExpense, monthIncome)
+}
+
 
 // 
 function getObjectOfCategoryDepandOnTypeOfTransaction(ObjectOfIncomeOrExpense,transaction){
@@ -63,6 +129,7 @@ function getObjectOfCategoryDepandOnTypeOfTransaction(ObjectOfIncomeOrExpense,tr
             }
         }
         console.log(ObjectOfIncomeOrExpense)
+    drowChartAndCategory()
 }
 
 function drawCategoryItemsWithProgressBar(ObjectOfIncomeOrExpense, chartCategoryLables,chartCategoryData,monthExpenseOrIncome,categoryId){
@@ -100,13 +167,14 @@ function generateRandomColor() {
     return `rgb(${red}, ${green}, ${blue})`;
 }
 
-
-let ctxExpense = document.getElementById("expenseChart").getContext("2d");
-let ctxIncome = document.getElementById('incomeChart').getContext('2d');
-
-function drawChart(chartId,labels,data){
+function drawChart(chartKey,chartId,labels,data){
     let backgroundColors = expenseCategoryLables.map(() => generateRandomColor());
-    new Chart( chartId,{
+    
+   if (chartKey.chart !== null) {
+        chartKey.chart.destroy();
+    }
+
+    chartKey.chart  = new Chart( chartId,{
         type: "pie",
         data:{
             labels: labels,
@@ -123,19 +191,34 @@ function drawChart(chartId,labels,data){
     })
 }
 
-if(monthExpense>0){
-    drawCategoryItemsWithProgressBar(expenseCategory,expenseCategoryLables,expenseCategoryData,monthExpense ,'categoryExpense');
-    drawChart(ctxExpense,expenseCategoryLables,expenseCategoryData);
+function drowChartAndCategory(){
+
+        // Clear previous categories and data
+    $('#categoryExpense').empty();
+    $('#categoryIncome').empty();
+    expenseCategoryLables = [];
+    expenseCategoryData = [];
+    incomeCategoryLables = [];
+    incomeCategoryData = [];
+
+    if(monthExpense>0){
+        drawCategoryItemsWithProgressBar(expenseCategory,expenseCategoryLables,expenseCategoryData,monthExpense ,'categoryExpense');
+        drawChart(chartInstanceExpense, ctxExpense,expenseCategoryLables,expenseCategoryData);
+    }
+    if(monthIncome>0){
+        drawCategoryItemsWithProgressBar(incomeCategory,incomeCategoryLables,incomeCategoryData,monthIncome, 'categoryIncome');
+        drawChart(chartInstanceIncome,ctxIncome,incomeCategoryLables,incomeCategoryData);
+    }
+        //drawStatisticsChart();
+    displayDataInTable();
 }
-if(monthIncome>0){
-    drawCategoryItemsWithProgressBar(incomeCategory,incomeCategoryLables,incomeCategoryData,monthIncome, 'categoryIncome');
-    drawChart(ctxIncome,incomeCategoryLables,incomeCategoryData);
-}
+
 
 //-------------------------
 
 
 // table
+function displayDataInTable(){
 const transactionsByDate = {};
 monthTransactions.forEach(transaction => {
     const { date, amount, type } = transaction;
@@ -159,6 +242,7 @@ const transactionsLOOP = Object.entries(transactionsByDate).map(([tranDate, { to
 
 console.log(transactionsLOOP);
 let tbody = document.getElementById('tbody');
+$(tbody).empty()
 let row = tbody.insertRow();
 row.insertCell(0).textContent= monthName;
 row.insertCell(1).textContent= - monthExpense;
@@ -171,17 +255,24 @@ let row = tbody.insertRow();
 row.insertCell(0).textContent= transaction.tranDate;
 row.insertCell(1).textContent= - transaction.totalTransactionExpense;
 row.insertCell(2).textContent= (transaction.totalTransactionIncome>0)? `+ ${transaction.totalTransactionIncome}` :transaction.totalTransactionIncome ;
-row.insertCell(3).textContent= transaction.balanseTransaction;
+row.insertCell(3).textContent= (transaction.balanseTransaction>0)? `+ ${transaction.balanseTransaction}`:transaction.balanseTransaction;
 })
+console.log(transactionsLOOP)
+drawStatisticsChart(transactionsLOOP);
+}
+
 
 // chart for statistics
-const labels = transactionsLOOP.map(t => t.tranDate);
+function drawStatisticsChart(transactionsLOOP){
+    const labels = transactionsLOOP.map(t => t.tranDate);
 const incomeData = transactionsLOOP.map(t => t.totalTransactionIncome);
 const expenseData = transactionsLOOP.map(t => t.totalTransactionExpense);
 
 const ctxBlanace = document.getElementById('dailyChart').getContext('2d');
-
-new Chart(ctxBlanace, {
+if(chartInstance !== null){
+chartInstance.destroy();
+}
+chartInstance=new Chart(ctxBlanace, {
     type: 'bar',
     data: {
         labels: labels,
@@ -217,3 +308,8 @@ new Chart(ctxBlanace, {
         }
     }
 });
+}
+
+
+
+

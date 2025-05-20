@@ -29,18 +29,47 @@
       </div>
     </header>
 
+    <!-- <h2 class="text-center my-4">Financial Reports</h2>
+    <div class="container">
+      <form class="d-flex justify-content-evenly gap-3 mb-4">
+      <label>Chosee year for make Financial Reports </label> 
+      <input type="date" class="form-control" >
+            <input type="text" class="form-control" placeholder="Please Enter the Year" >
+
+       <label>Chosee month for make Financial Reports </label>
+
+      <input type="month" class="form-control">
+
+      <button type="submit" class="btn btn-warning">Generate</button>
+      </form>
+
+    </div> -->
     <h2 class="text-center my-4">Financial Reports</h2>
-    <div class="d-flex justify-content-center gap-3 mb-4">
-      <!-- <select id="filterYear" class="form-select w-auto">
-      </select> -->
-              <input type="date">
+      <div class="container">
+        <form class="row g-3 mb-4 align-items-end">
+              <div class="col-md-6" id="selection">
+                <label for="reportType" class="form-label">Select Report Type</label>
+                <select id="reportType" class="form-select" onchange="toggleInputs()">
+                  <option value="" selected disabled>-- Choose --</option>
+                  <option value="year">Year</option>
+                  <option value="month">Month</option>
+                </select>
+              </div>
+              <div class="col-md-4 d-none" id="yearInput">
+                  <label for="year" class="form-label">Enter Year</label>
+                  <input type="text" class="form-control" id="year" onchange="formatYear()">
+              </div>
 
-      <!-- <select id="filterMonth" class="form-select w-auto">
-      </select> -->
-              <input type="month">
+              <div class="col-md-4 d-none" id="monthInput">
+                <label for="month" class="form-label">Choose Month</label>
+                <input type="month" class="form-control" id="month">
+              </div>
 
-      <button class="btn btn-warning">Generate</button>
-    </div>
+              <div class="col-md-6" id="btnSubmit">
+                <button type="submit" class="btn btn-warning w-100">Generate</button>
+              </div>
+        </form>
+      </div>
     <main class="container d-flex justify-content-between">
           <section id="expense">
             <div>
