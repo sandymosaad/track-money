@@ -4,7 +4,7 @@ $(document).ready(function (){
 let userName = JSON.parse(sessionStorage.getItem('User')).userName;
 let userEmail = JSON.parse(sessionStorage.getItem('User')).email;
 let passHash = JSON.parse(sessionStorage.getItem('User')).newPassHash;
-
+let monthName =new Date().toLocaleDateString('en-US', {month:'long'});
 
 $('#userName').html(`User Name: ${userName}`);
 $('#userEmail').html(`User Email: ${userEmail}`);
@@ -22,13 +22,11 @@ $('#updateData').on('click' , async function(event){
     let oldPass =$('#oldPass').val().trim();
     let newPass = $('#newPass').val().trim();
     let oldPassHash = await hashPassword(oldPass) ;
-    console.log('jjjjjjjjj')
-    console.log(oldPass)
-    console.log(newPass)
-    console.log(oldPassHash)
+    // console.log(oldPass)
+    // console.log(newPass)
+    // console.log(oldPassHash)
 
     if(oldPassHash===passHash){
-            console.log('hhh')
             let user={};
             if(newPass){
                 let newPassHash= await hashPassword(newPass) ;
@@ -36,7 +34,7 @@ $('#updateData').on('click' , async function(event){
             }else{
                 user={userName,email,oldPassHash}
             }
-            
+
         let users=JSON.parse(localStorage.getItem ('Users'))||[]
         users= users.filter(user=> user.userName!==userName);
         users.push(user);
@@ -62,4 +60,18 @@ async function hashPassword(pass) {
     return hashpass
 }
 
+
+$('#clearAllData').on('click', function(){
+    if (confirm('Are You Sure You Want To Clear All Data !')=== true){
+        localStorage.removeItem(`budget-${userName}`);
+        localStorage.removeItem(`transactions-${userName}`);
+        localStorage.removeItem(`money-${monthName}-${userName}`);
+    }else{
+        console.log('done')
+    }
+
+    
+
+
+})
 })
