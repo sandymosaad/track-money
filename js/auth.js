@@ -85,7 +85,7 @@ $('#login').on('click',async function(event){
     //console.log(hashedPassword)
 
     let users = JSON.parse(localStorage.getItem('Users'))
-    let user =users.find( user=> user.newPassHash ==hashedPassword && (user.userName ===Name || user.email ===Name ));
+    let user =users.find( user=> user.hashPass ==hashedPassword && (user.userName ===Name || user.email ===Name ));
     if(user){
         sessionStorage.setItem('User',JSON.stringify(user))
         window.location.href='dashboard.html';

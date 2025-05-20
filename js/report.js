@@ -23,7 +23,7 @@ let monthName = new Date().toLocaleDateString('en-US', {month:'long'});
 let year = new Date().getFullYear();
 // let monthName;
 // let year;
-let transactions = JSON.parse(localStorage.getItem(`transactions-${userName}`));
+
 let monthTransactions=[];
 
 let monthExpense =0;
@@ -46,335 +46,339 @@ const rowsPerPage = 4
 
 let ctxExpense = document.getElementById("expenseChart").getContext("2d");
 let ctxIncome = document.getElementById('incomeChart').getContext('2d');
-getTransactionsMonth(monthName, year)
-function toggleInputs() {
-    const reportType = document.getElementById('reportType').value;
-    const yearInput = document.getElementById('yearInput');
-    const monthInput = document.getElementById('monthInput');
+let transactions = JSON.parse(localStorage.getItem(`transactions-${userName}`));
 
-    $('#selection' ).removeClass().addClass('col-md-4');
-    $('#btnSubmit' ).removeClass().addClass('col-md-4');
-    yearInput.classList.add('d-none');
-    monthInput.classList.add('d-none');
+if(transactions){
+    $('#pageBody').removeClass('d-none');
+    $('#noDataInTable').addClass('d-none')
 
-    if (reportType === 'year') {
-        yearInput.classList.remove('d-none');
-    } else if (reportType === 'month') {
-        monthInput.classList.remove('d-none');
+    getTransactionsMonth(monthName, year);
+    function toggleInputs() {
+        const reportType = document.getElementById('reportType').value;
+        const yearInput = document.getElementById('yearInput');
+        const monthInput = document.getElementById('monthInput');
+
+        $('#selection' ).removeClass().addClass('col-md-4');
+        $('#btnSubmit' ).removeClass().addClass('col-md-4');
+        yearInput.classList.add('d-none');
+        monthInput.classList.add('d-none');
+
+        if (reportType === 'year') {
+            yearInput.classList.remove('d-none');
+        } else if (reportType === 'month') {
+            monthInput.classList.remove('d-none');
+        }
+
     }
 
-}
-// function formatYear() {
-//     const dateInput = document.getElementById('year');
-//     const dateValue = dateInput.value;
-//     // const yearOnly = new Date(dateValue).getFullYear();
-//     //alert('Selected Year: ' + dateValue);
-// }
-$('#btnSubmit').on('click', function(event){
-    event.preventDefault()
-    const yearInput = $('#year').val();
-    const monthInput = ($('#month').val());
-    
-    let fullDate = new Date(monthInput);
-    year = fullDate.getFullYear();
-    let monthNameInput = fullDate.toLocaleDateString('en-US', {month:'long'});
-    console.log(yearInput, monthInput)
-    monthName =monthNameInput;
-    ///year = yearInput
-        console.log( monthName)
-        if (monthInput){
-            getTransactionsMonth(monthName, year)
-        }
-        if(yearInput){
-            getTransactionsMonth(0,yearInput)
-        }
-})
-console.log( monthName)
+    $('#btnSubmit').on('click', function(event){
+        event.preventDefault()
+        const yearInput = $('#year').val();
+        const monthInput = ($('#month').val());
+        
+        let fullDate = new Date(monthInput);
+        year = fullDate.getFullYear();
+        let monthNameInput = fullDate.toLocaleDateString('en-US', {month:'long'});
+        console.log(yearInput, monthInput)
+        monthName =monthNameInput;
+        ///year = yearInput
+            console.log( monthName)
+            if (monthInput){
+                getTransactionsMonth(monthName, year)
+            }
+            if(yearInput){
+                getTransactionsMonth(0,yearInput)
+            }
+    })
+    console.log( monthName)
 
 
 
 // get month transactions and month income and expense and object of categorys
-function getTransactionsMonth(monthNameArr,yearArr){
-monthTransactions=[];
-console.log(monthNameArr, yearArr)
-if (monthNameArr){
-    transactions.forEach(transaction => {
-        if(monthNameArr===transaction.monthName && yearArr===transaction.year){
-            monthTransactions.push(transaction)
+    function getTransactionsMonth(monthNameArr,yearArr){
+        monthTransactions=[];
+        console.log(monthNameArr, yearArr)
+        if (monthNameArr){
+            transactions.forEach(transaction => {
+                if(monthNameArr===transaction.monthName && yearArr===transaction.year){
+                    monthTransactions.push(transaction)
+                }
+            });
+            console.log( monthTransactions)
+        } else if(monthNameArr===0){
+            console.log( transactions)
+            transactions.forEach(transaction => {
+                if( yearArr==transaction.year){
+                    monthTransactions.push(transaction)
+                }
+            });
+            console.log( monthTransactions)
+
         }
-    });
-    console.log( monthTransactions)
-} else if(monthNameArr===0){
-    console.log( transactions)
-    transactions.forEach(transaction => {
-        if( yearArr==transaction.year){
-            monthTransactions.push(transaction)
-        }
-    });
-    console.log( monthTransactions)
 
-}
+        console.log(monthTransactions)
+        getTotalIncomeAndExpense()
+    }
 
-console.log(monthTransactions)
-getTotalIncomeAndExpense()
-}
-
-function getTotalIncomeAndExpense(){
-    monthExpense=0;
-    monthIncome=0;
-    expenseCategory={};
-    incomeCategory={};
-    monthTransactions.forEach(transaction=>{
-        if(transaction.type==='expense'){
-            monthExpense+= transaction.amount;
-            getObjectOfCategoryDepandOnTypeOfTransaction(expenseCategory,transaction)
-        }else if (transaction.type==='income'){
-            monthIncome+= transaction.amount;
-            getObjectOfCategoryDepandOnTypeOfTransaction(incomeCategory,transaction)
-        }
-    });
-console.log(monthExpense, monthIncome)
-}
-
-
-// 
-function getObjectOfCategoryDepandOnTypeOfTransaction(ObjectOfIncomeOrExpense,transaction){
-    let categoryObj = categorys.find(cat => cat.kind === transaction.kind);
-        if (categoryObj){
-            let catCategory = categoryObj.category;
-            if(ObjectOfIncomeOrExpense[catCategory]){
-                ObjectOfIncomeOrExpense[catCategory]+=transaction.amount
-            }else{
-                ObjectOfIncomeOrExpense[catCategory]= transaction.amount
+    function getTotalIncomeAndExpense(){
+        monthExpense=0;
+        monthIncome=0;
+        expenseCategory={};
+        incomeCategory={};
+        monthTransactions.forEach(transaction=>{
+            if(transaction.type==='expense'){
+                monthExpense+= transaction.amount;
+                getObjectOfCategoryDepandOnTypeOfTransaction(expenseCategory,transaction)
+            }else if (transaction.type==='income'){
+                monthIncome+= transaction.amount;
+                getObjectOfCategoryDepandOnTypeOfTransaction(incomeCategory,transaction)
             }
-        }
-        console.log(ObjectOfIncomeOrExpense)
-    drowChartAndCategory()
-}
+        });
+    console.log(monthExpense, monthIncome)
+    }
 
-function drawCategoryItemsWithProgressBar(ObjectOfIncomeOrExpense, chartCategoryLables,chartCategoryData,monthExpenseOrIncome,categoryId){
-    Object.keys(ObjectOfIncomeOrExpense).forEach(key=>{
-        chartCategoryLables.push(key);
-        chartCategoryData.push(ObjectOfIncomeOrExpense[key])
-        let itemIcon;
-        let itemPercentage =ObjectOfIncomeOrExpense[key] /monthExpenseOrIncome *100 ;
-        categorys.forEach(ObjCategory=>{
-            if(ObjCategory.category===key){
-            itemIcon = ObjCategory.icon
+
+    // 
+    function getObjectOfCategoryDepandOnTypeOfTransaction(ObjectOfIncomeOrExpense,transaction){
+        let categoryObj = categorys.find(cat => cat.kind === transaction.kind);
+            if (categoryObj){
+                let catCategory = categoryObj.category;
+                if(ObjectOfIncomeOrExpense[catCategory]){
+                    ObjectOfIncomeOrExpense[catCategory]+=transaction.amount
+                }else{
+                    ObjectOfIncomeOrExpense[catCategory]= transaction.amount
+                }
             }
-        })
-        $(`#${categoryId}`).append(
-            `<div id="categoryItem" class='d-flex align-items-center mt-3'>
-                <i class="me-2 text-warning ${itemIcon} "></i><li>${[key]} = LE.${ObjectOfIncomeOrExpense[key]}</li>
-            </div>
-            <div class="progress mb-3">
-                <div id="itemProgress" class="progress-bar progress-bar bg-warning" role="progressbar" style="width: ${itemPercentage.toFixed(0)}%;"  aria-valuenow="${itemPercentage.toFixed(0)}%" aria-valuemin="0" aria-valuemax="100">
-                ${itemPercentage.toFixed(0)}%
+            console.log(ObjectOfIncomeOrExpense)
+        drowChartAndCategory()
+    }
+
+    function drawCategoryItemsWithProgressBar(ObjectOfIncomeOrExpense, chartCategoryLables,chartCategoryData,monthExpenseOrIncome,categoryId){
+        Object.keys(ObjectOfIncomeOrExpense).forEach(key=>{
+            chartCategoryLables.push(key);
+            chartCategoryData.push(ObjectOfIncomeOrExpense[key])
+            let itemIcon;
+            let itemPercentage =ObjectOfIncomeOrExpense[key] /monthExpenseOrIncome *100 ;
+            categorys.forEach(ObjCategory=>{
+                if(ObjCategory.category===key){
+                itemIcon = ObjCategory.icon
+                }
+            })
+            $(`#${categoryId}`).append(
+                `<div id="categoryItem" class='d-flex align-items-center mt-3'>
+                    <i class="me-2 text-warning ${itemIcon} "></i><li>${[key]} = LE.${ObjectOfIncomeOrExpense[key]}</li>
                 </div>
-            </div>
-    `
-        )
-    })
-}
+                <div class="progress mb-3">
+                    <div id="itemProgress" class="progress-bar progress-bar bg-warning" role="progressbar" style="width: ${itemPercentage.toFixed(0)}%;"  aria-valuenow="${itemPercentage.toFixed(0)}%" aria-valuemin="0" aria-valuemax="100">
+                    ${itemPercentage.toFixed(0)}%
+                    </div>
+                </div>
+        `
+            )
+        })
+    }
 
 
 // --------------------------------- charts --------------------------
 
-function generateRandomColor() {
-    const red = 255; 
-    const green = Math.floor(150 + Math.random() * 55);
-    const blue = Math.floor(Math.random() * 200); 
-    return `rgb(${red}, ${green}, ${blue})`;
-}
-
-function drawChart(chartKey,chartId,labels,data){
-    let backgroundColors = expenseCategoryLables.map(() => generateRandomColor());
-    
-   if (chartKey.chart !== null) {
-        chartKey.chart.destroy();
+    function generateRandomColor() {
+        const red = 255; 
+        const green = Math.floor(150 + Math.random() * 55);
+        const blue = Math.floor(Math.random() * 200); 
+        return `rgb(${red}, ${green}, ${blue})`;
     }
 
-    chartKey.chart  = new Chart( chartId,{
-        type: "pie",
-        data:{
-            labels: labels,
-            datasets: [{
-                data: data,
-                backgroundColor:backgroundColors,
-            }]
-        },
-        options:{
-            responsive :true,
-            maintainAspectRatio: false,
-
-        }
-    })
-}
-
-function drowChartAndCategory(){
-
-        // Clear previous categories and data
-    $('#categoryExpense').empty();
-    $('#categoryIncome').empty();
-    expenseCategoryLables = [];
-    expenseCategoryData = [];
-    incomeCategoryLables = [];
-    incomeCategoryData = [];
-
-    if(monthExpense>0){
-        drawCategoryItemsWithProgressBar(expenseCategory,expenseCategoryLables,expenseCategoryData,monthExpense ,'categoryExpense');
-        drawChart(chartInstanceExpense, ctxExpense,expenseCategoryLables,expenseCategoryData);
-    }
-    if(monthIncome>0){
-        drawCategoryItemsWithProgressBar(incomeCategory,incomeCategoryLables,incomeCategoryData,monthIncome, 'categoryIncome');
-        drawChart(chartInstanceIncome,ctxIncome,incomeCategoryLables,incomeCategoryData);
-    }
-        //drawStatisticsChart();
-    displayDataInTable();
-}
-
-
-// table
-function displayDataInTable(){
-    const transactionsByDate = {};
-    let year = monthTransactions[0].year
-    monthTransactions.forEach(transaction => {
-        const { date, amount, type } = transaction;
-
-        if (!transactionsByDate[date]) {
-            transactionsByDate[date] = { totalTransactionIncome: 0, totalTransactionExpense: 0 };
+    function drawChart(chartKey,chartId,labels,data){
+        let backgroundColors = expenseCategoryLables.map(() => generateRandomColor());
+        
+    if (chartKey.chart !== null) {
+            chartKey.chart.destroy();
         }
 
-        if (type === 'income') {
-            transactionsByDate[date].totalTransactionIncome += amount;
-        } else {
-            transactionsByDate[date].totalTransactionExpense += amount;
-        }
-    });
-    console.log(transactionsByDate)
-
-    const transactionsLOOP = Object.entries(transactionsByDate).map(([tranDate, { totalTransactionIncome, totalTransactionExpense }]) => {
-        const balanseTransaction = totalTransactionIncome - totalTransactionExpense;
-        return { tranDate, totalTransactionExpense, totalTransactionIncome, balanseTransaction };
-    });
-
-    console.log(transactionsLOOP);
-  
-    let tbody = document.getElementById('tbody');
-    $(tbody).empty()
-    let row = tbody.insertRow();
-    row.insertCell(0).textContent= (monthName==='Invalid Date')? year: monthName;
-    row.insertCell(1).textContent= - monthExpense;
-    row.insertCell(2).textContent= `+ ${monthIncome}`;
-    row.insertCell(3).textContent= monthIncome -monthExpense;
-
-   let start = (currentPage - 1) * rowsPerPage
-        let end = start + rowsPerPage
-        transactionsLOOP.sort((a, b) => b.id - a.id);
-        let visibleData = transactionsLOOP.slice(start, end);
-    visibleData.forEach(transaction=>{
-    let row = tbody.insertRow();
-    row.insertCell(0).textContent= transaction.tranDate;
-    row.insertCell(1).textContent= - transaction.totalTransactionExpense;
-    row.insertCell(2).textContent= (transaction.totalTransactionIncome>0)? `+ ${transaction.totalTransactionIncome}` :transaction.totalTransactionIncome ;
-    row.insertCell(3).textContent= (transaction.balanseTransaction>0)? `+ ${transaction.balanseTransaction}`:transaction.balanseTransaction;
-    })
-    console.log(transactionsLOOP)
-    drawStatisticsChart(transactionsLOOP);
-    renderPagination(transactionsLOOP)
-}
-
-
-// chart for statistics
-function drawStatisticsChart(transactionsLOOP){
-    const labels = transactionsLOOP.map(t => t.tranDate);
-const incomeData = transactionsLOOP.map(t => t.totalTransactionIncome);
-const expenseData = transactionsLOOP.map(t => t.totalTransactionExpense);
-
-const ctxBlanace = document.getElementById('dailyChart').getContext('2d');
-if(chartInstance !== null){
-chartInstance.destroy();
-}
-chartInstance=new Chart(ctxBlanace, {
-    type: 'bar',
-    data: {
-        labels: labels,
-        datasets: [
-            {
-                label: 'Income',
-                data: incomeData,
-                backgroundColor: 'rgba(25, 135, 84, 1)',
-                //borderColor: 'rgba(25, 135, 84, 1)',
-                borderWidth: 1
+        chartKey.chart  = new Chart( chartId,{
+            type: "pie",
+            data:{
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor:backgroundColors,
+                }]
             },
-            {
-                label: 'Expense',
-                data: expenseData,
-                backgroundColor: 'rgba(220, 53, 69, 1)',
-                // borderColor: 'rgba(220, 53, 69, 1)',
-                borderWidth: 1
+            options:{
+                responsive :true,
+                maintainAspectRatio: false,
+
             }
-        ]
-    },
-    options: {
-        responsive: true,
-        scales: {
-            y: {
-                beginAtZero: true
+        })
+    }
+
+    function drowChartAndCategory(){
+
+            // Clear previous categories and data
+        $('#categoryExpense').empty();
+        $('#categoryIncome').empty();
+        expenseCategoryLables = [];
+        expenseCategoryData = [];
+        incomeCategoryLables = [];
+        incomeCategoryData = [];
+
+        if(monthExpense>0){
+            drawCategoryItemsWithProgressBar(expenseCategory,expenseCategoryLables,expenseCategoryData,monthExpense ,'categoryExpense');
+            drawChart(chartInstanceExpense, ctxExpense,expenseCategoryLables,expenseCategoryData);
+        }
+        if(monthIncome>0){
+            drawCategoryItemsWithProgressBar(incomeCategory,incomeCategoryLables,incomeCategoryData,monthIncome, 'categoryIncome');
+            drawChart(chartInstanceIncome,ctxIncome,incomeCategoryLables,incomeCategoryData);
+        }
+            //drawStatisticsChart();
+        displayDataInTable();
+    }
+
+
+    // table
+    function displayDataInTable(){
+        const transactionsByDate = {};
+        let year = monthTransactions[0].year
+        monthTransactions.forEach(transaction => {
+            const { date, amount, type } = transaction;
+
+            if (!transactionsByDate[date]) {
+                transactionsByDate[date] = { totalTransactionIncome: 0, totalTransactionExpense: 0 };
             }
+
+            if (type === 'income') {
+                transactionsByDate[date].totalTransactionIncome += amount;
+            } else {
+                transactionsByDate[date].totalTransactionExpense += amount;
+            }
+        });
+        console.log(transactionsByDate)
+
+        const transactionsLOOP = Object.entries(transactionsByDate).map(([tranDate, { totalTransactionIncome, totalTransactionExpense }]) => {
+            const balanseTransaction = totalTransactionIncome - totalTransactionExpense;
+            return { tranDate, totalTransactionExpense, totalTransactionIncome, balanseTransaction };
+        });
+
+        console.log(transactionsLOOP);
+    
+        let tbody = document.getElementById('tbody');
+        $(tbody).empty()
+        let row = tbody.insertRow();
+        row.insertCell(0).textContent= (monthName==='Invalid Date')? year: monthName;
+        row.insertCell(1).textContent= - monthExpense;
+        row.insertCell(2).textContent= `+ ${monthIncome}`;
+        row.insertCell(3).textContent= monthIncome -monthExpense;
+
+    let start = (currentPage - 1) * rowsPerPage
+            let end = start + rowsPerPage
+            transactionsLOOP.sort((a, b) => b.id - a.id);
+            let visibleData = transactionsLOOP.slice(start, end);
+        visibleData.forEach(transaction=>{
+        let row = tbody.insertRow();
+        row.insertCell(0).textContent= transaction.tranDate;
+        row.insertCell(1).textContent= - transaction.totalTransactionExpense;
+        row.insertCell(2).textContent= (transaction.totalTransactionIncome>0)? `+ ${transaction.totalTransactionIncome}` :transaction.totalTransactionIncome ;
+        row.insertCell(3).textContent= (transaction.balanseTransaction>0)? `+ ${transaction.balanseTransaction}`:transaction.balanseTransaction;
+        })
+        console.log(transactionsLOOP)
+        drawStatisticsChart(transactionsLOOP);
+        renderPagination(transactionsLOOP)
+    }
+
+
+    // chart for statistics
+    function drawStatisticsChart(transactionsLOOP){
+        const labels = transactionsLOOP.map(t => t.tranDate);
+    const incomeData = transactionsLOOP.map(t => t.totalTransactionIncome);
+    const expenseData = transactionsLOOP.map(t => t.totalTransactionExpense);
+
+    const ctxBlanace = document.getElementById('dailyChart').getContext('2d');
+    if(chartInstance !== null){
+    chartInstance.destroy();
+    }
+    chartInstance=new Chart(ctxBlanace, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Income',
+                    data: incomeData,
+                    backgroundColor: 'rgba(25, 135, 84, 1)',
+                    //borderColor: 'rgba(25, 135, 84, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Expense',
+                    data: expenseData,
+                    backgroundColor: 'rgba(220, 53, 69, 1)',
+                    // borderColor: 'rgba(220, 53, 69, 1)',
+                    borderWidth: 1
+                }
+            ]
         },
-        plugins: {
-            title: {
-                display: true,
-                text: 'Daily Income vs Expense'
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Daily Income vs Expense'
+                }
             }
         }
+    });
     }
-});
-}
 
-window.transactionsData = [];
-function totalPagesFunction(transactionsLOOP){
-    console.log(transactionsLOOP)
-    let totalPages = Math.ceil(transactionsLOOP.length / rowsPerPage)
-    return totalPages
-}
-function renderPagination(transactionsLOOP) {
-    console.log(transactionsLOOP)
-    window.transactionsData = transactionsLOOP;
-    let totalPages  = totalPagesFunction(transactionsLOOP);
-    const paginationList = $('#pagination ul');
-    paginationList.empty();
-    paginationList.append(`
-        <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
-            <a class="page-link"  onclick='pagination("prev")'>Previous</a>
-        </li>`);
-
-    for (let i = 1; i <= totalPages; i++) {
-        paginationList.append(`            
-            <li class="page-item ${currentPage === i || totalPages===1 ? 'active' : ''}">
-                <a class="page-link"  onclick='pagination(${i})'>${i}</a>
+    window.transactionsData = [];
+    function totalPagesFunction(transactionsLOOP){
+        console.log(transactionsLOOP)
+        let totalPages = Math.ceil(transactionsLOOP.length / rowsPerPage)
+        return totalPages
+    }
+    function renderPagination(transactionsLOOP) {
+        console.log(transactionsLOOP)
+        window.transactionsData = transactionsLOOP;
+        let totalPages  = totalPagesFunction(transactionsLOOP);
+        const paginationList = $('#pagination ul');
+        paginationList.empty();
+        paginationList.append(`
+            <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                <a class="page-link"  onclick='pagination("prev")'>Previous</a>
             </li>`);
+
+        for (let i = 1; i <= totalPages; i++) {
+            paginationList.append(`            
+                <li class="page-item ${currentPage === i || totalPages===1 ? 'active' : ''}">
+                    <a class="page-link"  onclick='pagination(${i})'>${i}</a>
+                </li>`);
+        }
+
+        paginationList.append(`
+            <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                <a class="page-link"  onclick='pagination("next")'>Next</a>
+            </li>`);
+        
     }
 
-    paginationList.append(`
-        <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
-            <a class="page-link"  onclick='pagination("next")'>Next</a>
-        </li>`);
-    
-}
-
-function pagination(action){
-    const totalPages = totalPagesFunction(window.transactionsData);
-    if (action === 'next' && currentPage < totalPages) {
-        currentPage++;
-    } else if (action === 'prev' && currentPage > 1) {
-        currentPage--;
-    } else if (!isNaN(action)) {
-        currentPage = Number(action);
+    function pagination(action){
+        const totalPages = totalPagesFunction(window.transactionsData);
+        if (action === 'next' && currentPage < totalPages) {
+            currentPage++;
+        } else if (action === 'prev' && currentPage > 1) {
+            currentPage--;
+        } else if (!isNaN(action)) {
+            currentPage = Number(action);
+        }
+        displayDataInTable(window.transactionsData);
+        renderPagination(window.transactionsData);
     }
-    displayDataInTable(window.transactionsData);
-    renderPagination(window.transactionsData);
+
+}else{
+    $('#pageBody').addClass('d-none');
+    $('#noDataInTable').removeClass('d-none')
 }
-
-

@@ -134,7 +134,7 @@ function displayTransactionsDataInTable(transactions){
             $("#transactionTable").addClass('d-none')
             $("#pagination").addClass('d-none')
             $('#noDataInTable').removeClass('d-none')
-            $('#noDataInTable').text('Do not have any transaction yet !');
+            $('#noDataInTable').text("You Don't Have Any Transaction Yet !");
         }
     renderPagination(transactions);
     calculateTotalIncomeForThisMonth();

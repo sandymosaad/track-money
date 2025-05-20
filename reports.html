@@ -30,7 +30,9 @@
     </header>
 
     <h2 class="text-center my-4">Financial Reports</h2>
-      <div class="container">
+    <h3 id="noDataInTable" class="text-center d-none py-3 m-5 alert alert-warning">You Don't Have Any Repots Yet</h3>
+    <main class="container" id="pageBody">
+      <section>
         <form class="row g-3 mb-4 align-items-end">
               <div class="col-md-6" id="selection">
                 <label for="reportType" class="form-label">Select Report Type</label>
@@ -54,51 +56,51 @@
                 <button type="submit" class="btn btn-warning w-100">Generate</button>
               </div>
         </form>
-      </div>
-    <main class="container d-flex justify-content-between">
-          <section id="expense">
-            <div>
-            <canvas id="expenseChart"></canvas>
-            </div>
-            <div>
-              <h3> Category Expense</h3>
-              <div id="categoryExpense" class="scroll-container"></div>
-            </div>
-          </section>
-          <section id="income">
-            <div>
-                <canvas id="incomeChart"></canvas>
-            </div>
-            <div>
-              <h3> Category Income</h3>
-              <div id="categoryIncome" class="scroll-container"></div>
-            </div>
-          </section>
-          <section id="statistics">
-            <div>
-              <canvas id="dailyChart" width="600" height="300"></canvas>
-            </div>
-            <div>
-              <h3> Balance</h3>
-              <table class="table table-striped " id="balanceTable" >
-                  <thead>
-                    <tr> 
-                      <th scope="col">Date</th>
-                      <th scope="col">Expense</th>
-                      <th scope="col">Income</th>
-                      <th scope="col">Balance</th>
-                    </tr>
-                  </thead>
-                  <tbody id="tbody">
-                  </tbody>
-              </table>
-              <nav aria-label="Page navigation example" id="pagination">
-                  <ul class="pagination justify-content-center"></ul>
-              </nav>
-            </div>
-          </section>
+      </section>
+      <section class=" d-flex justify-content-between">
+            <section id="expense">
+              <div>
+              <canvas id="expenseChart"></canvas>
+              </div>
+              <div>
+                <h3> Category Expense</h3>
+                <div id="categoryExpense" class="scroll-container"></div>
+              </div>
+            </section>
+            <section id="income">
+              <div>
+                  <canvas id="incomeChart"></canvas>
+              </div>
+              <div>
+                <h3> Category Income</h3>
+                <div id="categoryIncome" class="scroll-container"></div>
+              </div>
+            </section>
+            <section id="statistics">
+              <div>
+                <canvas id="dailyChart" width="600" height="300"></canvas>
+              </div>
+              <div>
+                <h3> Balance</h3>
+                <table class="table table-striped " id="balanceTable" >
+                    <thead>
+                      <tr> 
+                        <th scope="col">Date</th>
+                        <th scope="col">Expense</th>
+                        <th scope="col">Income</th>
+                        <th scope="col">Balance</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tbody">
+                    </tbody>
+                </table>
+                <nav aria-label="Page navigation example" id="pagination">
+                    <ul class="pagination justify-content-center"></ul>
+                </nav>
+              </div>
+            </section>
+      </section>
     </main>
-
 
 
 
