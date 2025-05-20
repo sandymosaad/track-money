@@ -41,7 +41,8 @@ let chartInstance = null;
 let chartInstanceExpense = { chart: null };
 let chartInstanceIncome = { chart: null };
 
-
+let currentPage = 1
+const rowsPerPage = 4
 
 let ctxExpense = document.getElementById("expenseChart").getContext("2d");
 let ctxIncome = document.getElementById('incomeChart').getContext('2d');
@@ -233,9 +234,6 @@ function drowChartAndCategory(){
 }
 
 
-//-------------------------
-
-
 // table
 function displayDataInTable(){
     const transactionsByDate = {};
@@ -261,6 +259,7 @@ function displayDataInTable(){
     });
 
     console.log(transactionsLOOP);
+  
     let tbody = document.getElementById('tbody');
     $(tbody).empty()
     let row = tbody.insertRow();
@@ -269,8 +268,11 @@ function displayDataInTable(){
     row.insertCell(2).textContent= `+ ${monthIncome}`;
     row.insertCell(3).textContent= monthIncome -monthExpense;
 
-
-    transactionsLOOP.forEach(transaction=>{
+   let start = (currentPage - 1) * rowsPerPage
+        let end = start + rowsPerPage
+        transactionsLOOP.sort((a, b) => b.id - a.id);
+        let visibleData = transactionsLOOP.slice(start, end);
+    visibleData.forEach(transaction=>{
     let row = tbody.insertRow();
     row.insertCell(0).textContent= transaction.tranDate;
     row.insertCell(1).textContent= - transaction.totalTransactionExpense;
@@ -279,6 +281,7 @@ function displayDataInTable(){
     })
     console.log(transactionsLOOP)
     drawStatisticsChart(transactionsLOOP);
+    renderPagination(transactionsLOOP)
 }
 
 
@@ -330,6 +333,48 @@ chartInstance=new Chart(ctxBlanace, {
 });
 }
 
+window.transactionsData = [];
+function totalPagesFunction(transactionsLOOP){
+    console.log(transactionsLOOP)
+    let totalPages = Math.ceil(transactionsLOOP.length / rowsPerPage)
+    return totalPages
+}
+function renderPagination(transactionsLOOP) {
+    console.log(transactionsLOOP)
+    window.transactionsData = transactionsLOOP;
+    let totalPages  = totalPagesFunction(transactionsLOOP);
+    const paginationList = $('#pagination ul');
+    paginationList.empty();
+    paginationList.append(`
+        <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+            <a class="page-link"  onclick='pagination("prev")'>Previous</a>
+        </li>`);
 
+    for (let i = 1; i <= totalPages; i++) {
+        paginationList.append(`            
+            <li class="page-item ${currentPage === i || totalPages===1 ? 'active' : ''}">
+                <a class="page-link"  onclick='pagination(${i})'>${i}</a>
+            </li>`);
+    }
+
+    paginationList.append(`
+        <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+            <a class="page-link"  onclick='pagination("next")'>Next</a>
+        </li>`);
+    
+}
+
+function pagination(action){
+    const totalPages = totalPagesFunction(window.transactionsData);
+    if (action === 'next' && currentPage < totalPages) {
+        currentPage++;
+    } else if (action === 'prev' && currentPage > 1) {
+        currentPage--;
+    } else if (!isNaN(action)) {
+        currentPage = Number(action);
+    }
+    displayDataInTable(window.transactionsData);
+    renderPagination(window.transactionsData);
+}
 
 
