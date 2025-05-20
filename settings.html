@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/settingsStyle.css">
+    <link rel="stylesheet" href="css/dashboardStyle.css ">
+</head>
+<body>
+        <header class="d-flex justify-content-evenly align-items-center px-3 py-2 shadow">
+            <div class="d-flex align-items-center logo">
+                <img src="assets/images/LOGO.png" alt="logo" >
+                <h5>Track Money</h5>
+            </div>
+            <nav class="navbar navbar-expand-lg">
+                <ul class="d-flex me-3" >
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="transactions.html">Transactions</a></li>
+                    <li><a href="budget.html">Budget</a></li>
+                    <li><a href="reports.html">Reports</a></li>
+                    <li><a href="settings.html">Settings</a></li>
+                </ul>
+            </nav>
+            <div>
+                <button class="btn btn-danger">Logout</button>
+            </div>
+        </header>
+
+        <main class="container d-flex align-items-center mt-5">
+            <section>
+                <img src="assets/images/c07209c5-4da5-4859-bf3a-f25a87e9c6e3.jpg" class="w-50">
+            </section>
+            <section>
+                <h3 id="userName">User Name : ssoos </h3>
+                <h3 id="userEmail">Email : sanansng@dfas </h3>
+                <button type="button" class="btn btn-warning text-center" id="editData" data-bs-toggle="modal" data-bs-target="#personalInfoModal">
+                    Edit Data
+                </button>
+                <button class="btn btn-warning">Clear All  Data In Account</button>
+
+                <div class="modal fade" id="personalInfoModal" tabindex="-1" aria-labelledby="personalInfoModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="personalInfoModalLabel">Your Personal Information</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="mb-3">
+                                    <label for="userNameInput" class="form-label">User Name</label>
+                                    <input type="text" id="userNameInput" class="form-control" name="userNameInput" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="userEmailInput" class="form-label">Email</label>
+                                    <input type="email" id="userEmailInput" class="form-control" name="userEmailInput">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="oldPass" class="form-label">Old Passward</label>
+                                    <input type="password" id="oldPass" class="form-control" name="oldPass" placeholder="Enter Your Old Password">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="newPass" class="form-label">New Passward</label>
+                                    <input type="password" id="newPass" class="form-control" name="newPass" placeholder="Enter New Password">
+                                </div>
+                                <div id="validationData" class="text-center d-none py-3 m-5 alert alert-warning"></div>
+                                <button type="submit" class="btn btn-warning " id="updateData">Update Data </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </section>
+
+        </main>
+
+
+
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/settings.js"></script>
+</body>
+</html>
