@@ -1,4 +1,6 @@
-$(document).ready(function () {
+$(document).ready(function(){
+let user = JSON.parse(sessionStorage.getItem('User'));
+if(!user)window.location.href='index.html';
 
 let userName =JSON.parse( sessionStorage.getItem('User')).userName;
 let monthName = new Date().toLocaleDateString('en-US', {month:'long'});

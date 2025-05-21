@@ -1,3 +1,7 @@
+$(document).ready(function(){
+let user = JSON.parse(sessionStorage.getItem('User'));
+if(!user)window.location.href='index.html';
+
 let categorys =[
                     { kind:"food",icon:"fa-solid fa-utensils" , category: "Food & Groceries"},
                     { kind:"rent",icon:"fa-solid fa-home" , category: "Rent & Housing"},
@@ -382,3 +386,6 @@ if(transactions){
     $('#pageBody').addClass('d-none');
     $('#noDataInTable').removeClass('d-none')
 }
+
+
+})

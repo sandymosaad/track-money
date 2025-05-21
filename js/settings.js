@@ -1,12 +1,11 @@
+
+
 $(document).ready(function (){
-let userName = JSON.parse(sessionStorage.getItem('User')).userName;
+    let user = JSON.parse(sessionStorage.getItem('User'));
+
+if(!user)window.location.href='index.html';
 // console.log(userName)
-
-// if(!userName){window.location.href='index.html';
-//     console.log('hh')
-// }
-
-
+let userName = JSON.parse(sessionStorage.getItem('User')).userName;
 let userEmail = JSON.parse(sessionStorage.getItem('User')).email;
 let passHash = JSON.parse(sessionStorage.getItem('User')).newPassHash;
 let monthName =new Date().toLocaleDateString('en-US', {month:'long'});

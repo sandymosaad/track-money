@@ -1,5 +1,8 @@
+$(document).ready(function(){
+    let user = JSON.parse(sessionStorage.getItem('User'));
+    if(!user)window.location.href='index.html';
+
 // welcomed user
-let user = JSON.parse(sessionStorage.getItem("User"));
 let userName=user.userName;
 document.querySelector('.welcomedUser').textContent=`Welcome ${userName} in your dashboard`;
 
@@ -43,4 +46,4 @@ if (transactions.length>0){
 
 
 
-
+})

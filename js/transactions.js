@@ -1,6 +1,8 @@
-$(document).ready(function () {
+$(document).ready(function(){
+    let user = JSON.parse(sessionStorage.getItem('User'));
+    if(!user)window.location.href='index.html';
     // get user name
-    let userName =JSON.parse(sessionStorage.getItem("User")).userName;
+    let userName =user.userName;
     console.log(userName)
     let transactions=JSON.parse(localStorage.getItem(`transactions-${userName}`))||[];
     let currentPage = 1
