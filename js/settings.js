@@ -33,8 +33,8 @@ $('#updateData').on('click' , async function(event){
     if(oldPassHash===passHash){
             let user={};
             if(newPass){
-                let newPassHash= await hashPassword(newPass) ;
-                user={userName,email,newPassHash}
+                let hashPass= await hashPassword(newPass) ;
+                user={userName,email,hashPass}
             }else{
                 user={userName,email,oldPassHash}
             }
