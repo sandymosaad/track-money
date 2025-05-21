@@ -23,18 +23,18 @@ if (transactions.length>0){
         transactions.sort((a, b) => b.id - a.id);
         let visibleData = transactions.slice(0, 5);
     visibleData.forEach((transaction) => {
-      
         let row = tableBody.insertRow(); 
-        row.insertCell(0).textContent = transaction.date;
-        row.insertCell(1).textContent = transaction.description;
         
-        let typeCell = row.insertCell(2);
+        row.insertCell(0).textContent = transaction.kind;
+        row.insertCell(1).textContent = transaction.description;
+        row.insertCell(2).textContent = 'EL.' + transaction.amount;
+        row.insertCell(3).textContent = transaction.date;
+        let typeCell = row.insertCell(4);
         if (transaction.type === 'income') {
             typeCell.innerHTML = `<span class="badge bg-success">Income</span>`;
         } else {
             typeCell.innerHTML = `<span class="badge bg-danger">Expense</span>`;
         }
-        row.insertCell(3).textContent = 'EL.' + transaction.amount;
     });
 }else{
     $('#noDataInTable').removeClass('d-none')
