@@ -15,13 +15,22 @@ header nav ul li a{
     text-decoration: none;
     color: rgb(0, 0, 0);
 }
-header nav ul li a:hover{
+header nav ul li a:hover {
     color: #ffffff;
     background-color: #f3e788;
     padding: 5px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
+.active {
+    color: #ffffff;
+    background-color: #f3e788;
+    padding: 5px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
 @media (max-width: 768px) {
     header nav ul li {
         font-size: 16px;
